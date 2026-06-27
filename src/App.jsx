@@ -142,7 +142,7 @@ const tagColors = {
   excursion: { bg: "#d1fae5", text: "#065f46" },
 };
 
-const PAGES = ["Home", "Agenda", "Register", "Exhibition", "Sponsors", "Speakers", "Venue", "Media", "Admin"];
+const PAGES = ["Home", "About", "Agenda", "Register", "Exhibition", "Sponsors", "Speakers", "Venue", "Media", "Contact", "Admin"];
 
 // ─── COUNTDOWN ───────────────────────────────────────────────────────────────
 function Countdown({ dark }) {
@@ -1008,6 +1008,264 @@ function AdminPage() {
   );
 }
 
+// ─── ABOUT PAGE ──────────────────────────────────────────────────────────────
+function AboutPage({ setPage }) {
+  return (
+    <div>
+      {/* Hero */}
+      <div style={{ background: `linear-gradient(160deg, #050e1a 0%, ${C.navy} 50%, #0d3d2a 100%)`, padding: "64px 24px 56px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 70% 40%, rgba(201,168,76,0.08) 0%, transparent 55%)", pointerEvents: "none" }} />
+        <div style={{ position: "relative", maxWidth: 760, margin: "0 auto" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)", borderRadius: 24, padding: "6px 18px", marginBottom: 24 }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.gold, display: "inline-block" }} />
+            <span style={{ color: C.gold, fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" }}>About the Conference</span>
+          </div>
+          <h1 style={{ color: "#fff", fontSize: "clamp(24px,4.5vw,46px)", fontWeight: 900, margin: "0 0 16px", lineHeight: 1.15, letterSpacing: -0.5 }}>
+            12th East African Petroleum<br />Conference &amp; Exhibition
+          </h1>
+          <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 15, lineHeight: 1.7, maxWidth: 640, margin: "0 auto" }}>
+            The East African Petroleum Conference and Exhibition (EAPCE) is the premier intergovernmental energy forum for the East African Community, convening Heads of State, Ministers, industry CEOs and investors to shape the future of petroleum and energy in the region.
+          </p>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 24px" }}>
+
+        {/* What is EAPCE */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, marginBottom: 64, alignItems: "center" }}>
+          <div>
+            <SectionLabel>Background</SectionLabel>
+            <SectionTitle>What is EAPCE'27?</SectionTitle>
+            <p style={{ color: C.gray, fontSize: 14, lineHeight: 1.8, marginTop: 16, marginBottom: 16 }}>
+              The East African Petroleum Conference and Exhibition (EAPCE) is organised under the auspices of the East African Community (EAC) and held every two years in one of the EAC Partner States. It is the only conference on the continent that brings together all eight EAC Partner States under one roof to discuss petroleum exploration, production, refining, and energy transition.
+            </p>
+            <p style={{ color: C.gray, fontSize: 14, lineHeight: 1.8, marginBottom: 20 }}>
+              The 12th edition — <strong style={{ color: C.navy }}>EAPCE'27</strong> — will be hosted by the Republic of Rwanda through the Rwanda Mines, Petroleum and Gas Board (RMB) and the Rwanda Convention Bureau (RCB), at the Kigali Convention Centre from <strong style={{ color: C.navy }}>9–11 March 2027</strong>.
+            </p>
+            <button onClick={() => setPage("Register")} style={{ background: C.gold, color: C.navy, border: "none", padding: "12px 28px", borderRadius: 6, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Register to Attend →</button>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            {[["1994", "Year EAPCE was founded"], ["12th", "Edition in 2027"], ["8", "EAC Partner States"], ["1,000+", "Expected delegates"], ["70", "Exhibition booths"], ["3", "Conference days"]].map(([v, l]) => (
+              <div key={l} style={{ background: C.offWhite, borderRadius: 10, padding: "18px 16px", border: `1px solid ${C.lightGray}`, textAlign: "center" }}>
+                <div style={{ fontSize: 22, fontWeight: 900, color: C.navy }}>{v}</div>
+                <div style={{ fontSize: 11, color: C.gray, marginTop: 4, lineHeight: 1.4 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Theme */}
+        <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, #0d3d2a 100%)`, borderRadius: 14, padding: "40px 36px", marginBottom: 64, color: "#fff" }}>
+          <SectionLabel light>Conference Theme</SectionLabel>
+          <h2 style={{ color: C.gold, fontSize: "clamp(16px,2.5vw,24px)", fontWeight: 800, margin: "8px 0 16px", lineHeight: 1.3, fontStyle: "italic" }}>
+            "Strategic and Sustainable Oil and Gas Resources Exploitation for Energy Security in EAC"
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 14, lineHeight: 1.8, maxWidth: 700, marginBottom: 28 }}>
+            This theme reflects the EAC region's commitment to harnessing its abundant petroleum resources responsibly — balancing economic development, energy security, environmental stewardship, and the global energy transition.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 16 }}>
+            {[
+              ["⚡", "Energy Security", "Ensuring affordable, reliable energy across all 8 EAC Partner States"],
+              ["🌍", "Regional Economy", "Leveraging petroleum revenues for sustainable economic growth"],
+              ["🤝", "Investment & FDI", "Attracting global capital into EAC upstream and midstream projects"],
+              ["🌱", "Energy Transition", "Balancing hydrocarbon development with climate commitments"],
+            ].map(([icon, title, desc]) => (
+              <div key={title} style={{ background: "rgba(255,255,255,0.07)", borderRadius: 10, padding: "18px 16px", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div style={{ fontSize: 26, marginBottom: 10 }}>{icon}</div>
+                <div style={{ fontWeight: 700, color: C.gold, fontSize: 13, marginBottom: 6 }}>{title}</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.5 }}>{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Organisers */}
+        <div style={{ marginBottom: 64 }}>
+          <SectionLabel>Organisers</SectionLabel>
+          <SectionTitle>Who Organises EAPCE'27?</SectionTitle>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 20, marginTop: 28 }}>
+            {[
+              { name: "East African Community (EAC)", short: "EAC", desc: "The EAC is the regional intergovernmental organisation of the Republics of Burundi, DRC, Kenya, Rwanda, Somalia, South Sudan, Tanzania, and Uganda. It provides the mandate and institutional framework for EAPCE.", role: "Patron & Mandate", color: C.navy },
+              { name: "Rwanda Mines, Petroleum & Gas Board", short: "RMB", desc: "RMB is the national regulatory body overseeing Rwanda's mineral, petroleum, and gas sector. As host nation regulator, RMB leads the technical programme and government coordination for EAPCE'27.", role: "Host & Technical Lead", color: C.green },
+              { name: "Rwanda Convention Bureau", short: "RCB", desc: "RCB is Rwanda's national body for attracting and facilitating international meetings, conferences and exhibitions. RCB manages logistics, venue, hospitality, sponsorship and marketing for EAPCE'27.", role: "Events & Operations", color: "#7a3b00" },
+            ].map(org => (
+              <div key={org.name} style={{ background: "#fff", borderRadius: 12, border: `1px solid ${C.lightGray}`, overflow: "hidden" }}>
+                <div style={{ background: org.color, padding: "16px 20px", display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 8, background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 13, color: "#fff" }}>{org.short}</div>
+                  <div>
+                    <div style={{ color: C.gold, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1 }}>{org.role}</div>
+                    <div style={{ color: "#fff", fontWeight: 700, fontSize: 13, marginTop: 2 }}>{org.name}</div>
+                  </div>
+                </div>
+                <div style={{ padding: "16px 20px" }}>
+                  <p style={{ fontSize: 13, color: C.gray, lineHeight: 1.7, margin: 0 }}>{org.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Past editions */}
+        <div>
+          <SectionLabel>History</SectionLabel>
+          <SectionTitle>Past EAPCE Editions</SectionTitle>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24 }}>
+            {[
+              ["EAPCE'25", "11th Edition", "Kampala, Uganda", "2025"],
+              ["EAPCE'23", "10th Edition", "Mombasa, Kenya", "2023"],
+              ["EAPCE'21", "9th Edition", "Dar es Salaam, Tanzania", "2021"],
+              ["EAPCE'19", "8th Edition", "Bujumbura, Burundi", "2019"],
+              ["EAPCE'17", "7th Edition", "Nairobi, Kenya", "2017"],
+            ].map(([name, edition, location, year]) => (
+              <div key={name} style={{ background: "#fff", borderRadius: 8, padding: "14px 20px", border: `1px solid ${C.lightGray}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                <div style={{ display: "flex", align: "center", gap: 16 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 8, background: C.offWhite, border: `1px solid ${C.lightGray}`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 10, color: C.navy, textAlign: "center", lineHeight: 1.2 }}>{name.replace("EAPCE", "EAP\nCE")}</div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: C.text, fontSize: 14 }}>{name} — {edition}</div>
+                    <div style={{ fontSize: 12, color: C.gray, marginTop: 3 }}>📍 {location}</div>
+                  </div>
+                </div>
+                <span style={{ background: C.offWhite, color: C.navy, padding: "4px 12px", borderRadius: 12, fontSize: 12, fontWeight: 700, border: `1px solid ${C.lightGray}` }}>{year}</span>
+              </div>
+            ))}
+            <div style={{ background: `linear-gradient(135deg, ${C.navy}, #0d3d2a)`, borderRadius: 8, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                <div style={{ width: 48, height: 48, borderRadius: 8, background: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 10, color: C.navy, textAlign: "center", lineHeight: 1.3 }}>NEXT</div>
+                <div>
+                  <div style={{ fontWeight: 800, color: C.gold, fontSize: 14 }}>EAPCE'27 — 12th Edition</div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginTop: 3 }}>📍 Kigali Convention Centre, Rwanda</div>
+                </div>
+              </div>
+              <button onClick={() => setPage("Register")} style={{ background: C.gold, color: C.navy, border: "none", padding: "9px 20px", borderRadius: 6, fontSize: 12, fontWeight: 800, cursor: "pointer" }}>Register Now →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── CONTACT PAGE ─────────────────────────────────────────────────────────────
+function ContactPage() {
+  const [form, setForm] = useState({ name: "", email: "", org: "", subject: "", message: "" });
+  const [sent, setSent] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = "Required";
+    if (!form.email.match(/^[^@]+@[^@]+\.[^@]+$/)) e.email = "Valid email required";
+    if (!form.subject) e.subject = "Please select a subject";
+    if (!form.message.trim()) e.message = "Required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = () => { if (validate()) setSent(true); };
+
+  const F = ({ label, name, required, textarea }) => (
+    <div style={{ marginBottom: 16 }}>
+      <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}{required && <span style={{ color: C.danger }}> *</span>}</label>
+      {textarea
+        ? <textarea value={form[name]} onChange={e => { setForm(f => ({ ...f, [name]: e.target.value })); setErrors(er => ({ ...er, [name]: "" })); }} rows={5} style={{ width: "100%", padding: "10px 14px", border: `1.5px solid ${errors[name] ? C.danger : C.lightGray}`, borderRadius: 6, fontSize: 14, outline: "none", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit" }} />
+        : <input value={form[name]} onChange={e => { setForm(f => ({ ...f, [name]: e.target.value })); setErrors(er => ({ ...er, [name]: "" })); }} style={{ width: "100%", padding: "10px 14px", border: `1.5px solid ${errors[name] ? C.danger : C.lightGray}`, borderRadius: 6, fontSize: 14, outline: "none", boxSizing: "border-box", background: errors[name] ? "#fff5f5" : "#fff" }} />}
+      {errors[name] && <div style={{ color: C.danger, fontSize: 11, marginTop: 4 }}>⚠ {errors[name]}</div>}
+    </div>
+  );
+
+  return (
+    <PageWrap title="Contact Us" subtitle="Get in touch with the EAPCE'27 team — we're here to help">
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 32, alignItems: "start" }}>
+
+        {/* Contact form */}
+        <div style={{ background: "#fff", borderRadius: 12, padding: 32, border: `1px solid ${C.lightGray}` }}>
+          {!sent ? (
+            <>
+              <h3 style={{ color: C.navy, margin: "0 0 20px", fontSize: 17 }}>Send Us a Message</h3>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+                <F label="Full Name" name="name" required />
+                <F label="Email Address" name="email" required />
+              </div>
+              <F label="Organisation / Company" name="org" />
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.5 }}>Subject <span style={{ color: C.danger }}>*</span></label>
+                <select value={form.subject} onChange={e => { setForm(f => ({ ...f, subject: e.target.value })); setErrors(er => ({ ...er, subject: "" })); }}
+                  style={{ width: "100%", padding: "10px 14px", border: `1.5px solid ${errors.subject ? C.danger : C.lightGray}`, borderRadius: 6, fontSize: 14, background: "#fff" }}>
+                  <option value="">Select a subject…</option>
+                  <option>General Enquiry</option>
+                  <option>Registration Assistance</option>
+                  <option>Exhibition & Booth Booking</option>
+                  <option>Sponsorship Packages</option>
+                  <option>Speaker / Abstract Submission</option>
+                  <option>Media & Press Accreditation</option>
+                  <option>Venue & Accommodation</option>
+                  <option>Other</option>
+                </select>
+                {errors.subject && <div style={{ color: C.danger, fontSize: 11, marginTop: 4 }}>⚠ {errors.subject}</div>}
+              </div>
+              <F label="Message" name="message" required textarea />
+              <button onClick={handleSubmit} style={{ width: "100%", background: C.navy, color: "#fff", border: "none", padding: "15px", borderRadius: 8, fontSize: 15, fontWeight: 800, cursor: "pointer" }}>Send Message →</button>
+              <div style={{ marginTop: 12, fontSize: 11, color: C.gray, textAlign: "center" }}>We aim to respond within 1 business day.</div>
+            </>
+          ) : (
+            <div style={{ textAlign: "center", padding: "24px 0" }}>
+              <div style={{ width: 64, height: 64, borderRadius: "50%", background: C.green, color: "#fff", fontSize: 28, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>✓</div>
+              <h3 style={{ color: C.green, marginBottom: 8 }}>Message Sent!</h3>
+              <p style={{ color: C.gray, fontSize: 14, marginBottom: 20 }}>Thank you, <strong>{form.name}</strong>. We'll get back to you at <strong>{form.email}</strong> within 1 business day.</p>
+              <button onClick={() => { setSent(false); setForm({ name: "", email: "", org: "", subject: "", message: "" }); }} style={{ background: C.navy, color: "#fff", border: "none", padding: "10px 24px", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Send Another Message</button>
+            </div>
+          )}
+        </div>
+
+        {/* Contact details sidebar */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Departments */}
+          {[
+            { icon: "📋", dept: "Registration & Delegate Services", email: "registration@eapce27.rw", phone: "+250 788 452 503", hours: "Mon–Fri, 08:00–17:00 EAT" },
+            { icon: "🏭", dept: "Exhibition & Booth Booking", email: "exhibition@eapce27.rw", phone: "+250 788 452 504", hours: "Mon–Fri, 08:00–17:00 EAT" },
+            { icon: "💼", dept: "Sponsorship & Partnerships", email: "sponsorship@eapce27.rw", phone: "+250 788 452 505", hours: "Mon–Fri, 08:00–17:00 EAT" },
+            { icon: "🎤", dept: "Speaker & Abstract Submissions", email: "abstracts@eapce27.rw", phone: "", hours: "Deadline: 31 Dec 2026" },
+            { icon: "📰", dept: "Media & Press Accreditation", email: "media@eapce27.rw", phone: "+250 788 452 506", hours: "Mon–Fri, 08:00–17:00 EAT" },
+          ].map(c => (
+            <div key={c.dept} style={{ background: "#fff", borderRadius: 10, padding: "16px 18px", border: `1px solid ${C.lightGray}` }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                <span style={{ fontSize: 20, flexShrink: 0, marginTop: 2 }}>{c.icon}</span>
+                <div>
+                  <div style={{ fontWeight: 700, color: C.navy, fontSize: 13, marginBottom: 5 }}>{c.dept}</div>
+                  <div style={{ fontSize: 12, color: C.gold, fontWeight: 600, marginBottom: 2 }}>📧 {c.email}</div>
+                  {c.phone && <div style={{ fontSize: 12, color: C.gray, marginBottom: 2 }}>📞 {c.phone}</div>}
+                  <div style={{ fontSize: 11, color: C.gray }}>{c.hours}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Address */}
+          <div style={{ background: C.navy, borderRadius: 10, padding: "18px 20px", color: "#fff" }}>
+            <div style={{ fontWeight: 700, color: C.gold, fontSize: 13, marginBottom: 10 }}>🏢 Secretariat Address</div>
+            <div style={{ fontSize: 13, lineHeight: 1.9, color: "rgba(255,255,255,0.75)" }}>
+              Rwanda Convention Bureau<br />
+              KG 9 Ave, Kigali<br />
+              P.O. Box 6239, Kigali, Rwanda<br />
+              <br />
+              <span style={{ color: C.gold, fontWeight: 600 }}>info@eapce27.rw</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Map placeholder */}
+      <div style={{ marginTop: 40, background: "linear-gradient(135deg, #e8f4f8, #d6eaf8)", borderRadius: 12, height: 180, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${C.lightGray}` }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 36 }}>📍</div>
+          <div style={{ fontWeight: 700, color: C.navy, fontSize: 15, marginTop: 8 }}>Kigali Convention Centre</div>
+          <div style={{ color: C.gray, fontSize: 12 }}>KG 2 Roundabout, Kigali, Rwanda &nbsp;·&nbsp; -1.9441° S, 30.0619° E</div>
+        </div>
+      </div>
+    </PageWrap>
+  );
+}
+
 // ─── SHARED ───────────────────────────────────────────────────────────────────
 function SectionLabel({ children, light }) {
   return <div style={{ fontSize: 11, fontWeight: 800, color: C.gold, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10 }}>{children}</div>;
@@ -1071,7 +1329,7 @@ function Footer({ setPage }) {
 export default function App() {
   const [page, setPage] = useState("Home");
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
-  const pages = { Home: <HomePage setPage={setPage} />, Agenda: <AgendaPage />, Register: <RegisterPage />, Exhibition: <ExhibitionPage />, Sponsors: <SponsorsPage />, Speakers: <SpeakersPage />, Venue: <VenuePage />, Media: <MediaPage />, Admin: <AdminPage /> };
+  const pages = { Home: <HomePage setPage={setPage} />, About: <AboutPage setPage={setPage} />, Agenda: <AgendaPage />, Register: <RegisterPage />, Exhibition: <ExhibitionPage />, Sponsors: <SponsorsPage />, Speakers: <SpeakersPage />, Venue: <VenuePage />, Media: <MediaPage />, Contact: <ContactPage />, Admin: <AdminPage /> };
   return (
     <div style={{ fontFamily: "'Inter','Segoe UI',sans-serif", background: C.offWhite, minHeight: "100vh", color: C.text }}>
       <Nav page={page} setPage={setPage} />
