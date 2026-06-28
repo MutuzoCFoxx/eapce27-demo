@@ -1,16 +1,11 @@
 FROM php:8.2-cli
 
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    libzip-dev \
-    libonig-dev \
-    libxml2-dev \
-    curl \
-    unzip \
-    && docker-php-ext-install \
-        pdo pdo_pgsql pdo_mysql \
-        mbstring xml bcmath zip \
-        tokenizer ctype fileinfo opcache \
+        libpq-dev \
+        libzip-dev \
+        libonig-dev \
+        unzip \
+    && docker-php-ext-install pdo_pgsql mbstring bcmath zip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
