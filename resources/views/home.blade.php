@@ -86,11 +86,11 @@
                 ['🎓','Ministerial Dialogue','High-level ministerial roundtable on regional energy policy and shared infrastructure'],
                 ['🛢️','Field Excursions','Technical site visits to Rwanda's key energy infrastructure and geological sites'],
                 ['🏆','Awards Gala','Annual East African Energy Awards recognising excellence across the value chain'],
-            ] as [$icon, $title, $desc])
+            ] as $ev)
             <div class="expect-card">
-                <div class="expect-icon">{{ $icon }}</div>
-                <h3>{{ $title }}</h3>
-                <p>{{ $desc }}</p>
+                <div class="expect-icon">{{ $ev[0] }}</div>
+                <h3>{{ $ev[1] }}</h3>
+                <p>{{ $ev[2] }}</p>
             </div>
             @endforeach
         </div>

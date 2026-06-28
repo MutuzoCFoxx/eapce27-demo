@@ -25,10 +25,10 @@
                 <div style="background:linear-gradient(135deg,var(--navy),#1a4a6e);border-radius:10px;height:220px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:0.85rem;margin-bottom:20px">Google Maps embed would go here</div>
                 <div class="card" style="padding:20px">
                     <h4 style="font-size:0.85rem;font-weight:700;color:var(--navy);margin-bottom:10px">Key Distances</h4>
-                    @foreach([['Kigali Intl Airport','30 min'],['Kigali City Centre','5 min walk'],['Radisson Blu','On-site'],['Marriott Hotel','1.2 km'],['Serena Hotel','2.0 km']] as [$place,$dist])
+                    @foreach([['Kigali Intl Airport','30 min'],['Kigali City Centre','5 min walk'],['Radisson Blu','On-site'],['Marriott Hotel','1.2 km'],['Serena Hotel','2.0 km']] as $d)
                     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--light-gray);font-size:0.85rem">
-                        <span style="color:var(--text)">{{ $place }}</span>
-                        <span style="color:var(--gold);font-weight:600">{{ $dist }}</span>
+                        <span style="color:var(--text)">{{ $d[0] }}</span>
+                        <span style="color:var(--gold);font-weight:600">{{ $d[1] }}</span>
                     </div>
                     @endforeach
                 </div>

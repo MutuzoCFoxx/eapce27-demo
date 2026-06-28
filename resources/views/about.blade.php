@@ -53,11 +53,11 @@
             <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:8px">Why Rwanda?</h2>
             <p style="color:rgba(255,255,255,0.65);max-width:640px;margin:0 auto 32px;font-size:0.95rem;line-height:1.7">Rwanda has positioned itself as East Africa's hub for international conferences and business, combining world-class infrastructure, political stability, and a rapidly growing energy sector.</p>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px">
-                @foreach([['#1','MICE Destination in Africa','ICCA Ranking'],['30 min','Airport to KCC','Transfer Time'],['100%','Renewable Power','National Grid'],['Safe & Clean','Business Climate','Consistently ranked']] as [$num,$label,$note])
+                @foreach([['#1','MICE Destination in Africa','ICCA Ranking'],['30 min','Airport to KCC','Transfer Time'],['100%','Renewable Power','National Grid'],['Safe & Clean','Business Climate','Consistently ranked']] as $stat)
                 <div>
-                    <div style="font-size:1.8rem;font-weight:900;color:var(--gold)">{{ $num }}</div>
-                    <div style="font-size:0.85rem;font-weight:600;margin:4px 0 2px">{{ $label }}</div>
-                    <div style="font-size:0.72rem;color:rgba(255,255,255,0.45)">{{ $note }}</div>
+                    <div style="font-size:1.8rem;font-weight:900;color:var(--gold)">{{ $stat[0] }}</div>
+                    <div style="font-size:0.85rem;font-weight:600;margin:4px 0 2px">{{ $stat[1] }}</div>
+                    <div style="font-size:0.72rem;color:rgba(255,255,255,0.45)">{{ $stat[2] }}</div>
                 </div>
                 @endforeach
             </div>

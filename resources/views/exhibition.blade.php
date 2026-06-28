@@ -12,10 +12,10 @@
 <section class="section">
     <div class="container">
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px">
-            @foreach([['70','Exhibition Booths'],['4,000 m²','Exhibition Space'],['3 Days','Open to Delegates']] as [$num,$label])
+            @foreach([['70','Exhibition Booths'],['4,000 m²','Exhibition Space'],['3 Days','Open to Delegates']] as $stat)
             <div class="card" style="padding:28px;text-align:center">
-                <div style="font-size:2.2rem;font-weight:900;color:var(--navy)">{{ $num }}</div>
-                <div style="font-size:0.8rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px">{{ $label }}</div>
+                <div style="font-size:2.2rem;font-weight:900;color:var(--navy)">{{ $stat[0] }}</div>
+                <div style="font-size:0.8rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px">{{ $stat[1] }}</div>
             </div>
             @endforeach
         </div>
