@@ -776,8 +776,8 @@ function RegisterPage() {
       )}
 
       {step === 3 && (
-        <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ background: "#fff", borderRadius: 12, padding: 48, border: `1px solid ${C.lightGray}` }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ background: "#fff", borderRadius: 12, padding: 48, border: `1px solid ${C.lightGray}`, marginBottom: 20 }}>
             <div style={{ width: 72, height: 72, borderRadius: "50%", background: C.green, color: "#fff", fontSize: 32, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>✓</div>
             <h2 style={{ color: C.green, marginBottom: 8, fontSize: 24 }}>Registration Confirmed!</h2>
             <p style={{ color: C.gray, marginBottom: 28 }}>Welcome, {form.firstName}! Confirmation sent to <strong>{form.email}</strong>.</p>
@@ -791,6 +791,25 @@ function RegisterPage() {
               </div>
               <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", letterSpacing: 2 }}>{badgeId}</div>
               <div style={{ fontSize: 10, color: C.gold, marginTop: 4 }}>EAPCE'27 · KIGALI · MAR 9–11, 2027</div>
+            </div>
+          </div>
+
+          {/* Accreditation CTA */}
+          <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, #0d3d2a 100%)`, borderRadius: 12, padding: "36px 40px", textAlign: "center" }}>
+            <div style={{ display: "inline-block", background: C.gold, color: C.navy, borderRadius: 4, padding: "4px 14px", fontSize: 10, fontWeight: 900, letterSpacing: 2, textTransform: "uppercase", marginBottom: 18 }}>Next Step</div>
+            <h3 style={{ color: "#fff", fontSize: 20, fontWeight: 800, margin: "0 0 10px" }}>Complete Your Event Accreditation</h3>
+            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, lineHeight: 1.7, marginBottom: 28, maxWidth: 440, margin: "0 auto 28px" }}>
+              Your registration is confirmed. To receive your official event badge and access credentials, please proceed to the EAPCE'27 accreditation system.
+            </p>
+            <a
+              href="https://app.eventpass.rw/register/event/DP9GdOp95zBxPY05sb77cHKKCfYCqx3zWiSSnSD5ZKgKApzSvUMktcDgHRDqKqjl"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-block", background: C.gold, color: C.navy, padding: "15px 40px", borderRadius: 5, fontSize: 15, fontWeight: 900, textDecoration: "none", letterSpacing: 0.3 }}>
+              Proceed to Accreditation →
+            </a>
+            <div style={{ marginTop: 16, fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+              Powered by EventPass · app.eventpass.rw
             </div>
           </div>
         </div>
