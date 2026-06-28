@@ -115,7 +115,6 @@
                 </ul>
                 <div class="nav-cta">
                     <a href="{{ route('register') }}" class="btn-gold">{{ __('messages.register_now') }}</a>
-                    <a href="{{ route('admin.dashboard') }}" class="btn-outline" style="padding:7px 14px;font-size:0.75rem;border-color:rgba(255,255,255,0.25)">{{ __('messages.nav_admin') }}</a>
                 </div>
                 <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
                     <span></span><span></span><span></span>
@@ -136,7 +135,6 @@
                 ] as $r => $label)
                     <a href="{{ route($r) }}" class="{{ request()->routeIs($r) ? 'active' : '' }}">{{ $label }}</a>
                 @endforeach
-                <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.*') ? 'active' : '' }}">{{ __('messages.nav_admin') }}</a>
             </div>
         </nav>
     </div>
