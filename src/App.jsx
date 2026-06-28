@@ -646,6 +646,7 @@ function RegisterPage() {
   const [errors, setErrors] = useState({});
   const [registered, setRegistered] = useState(() => JSON.parse(sessionStorage.getItem("eapce_regs") || "[]"));
   const [badgeId] = useState(() => "EAPCE27-" + Math.random().toString(36).substr(2, 8).toUpperCase());
+  const [accredDone, setAccredDone] = useState(false);
 
   const validate = () => {
     const e = {};
@@ -801,16 +802,42 @@ function RegisterPage() {
             <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, lineHeight: 1.7, marginBottom: 28, maxWidth: 440, margin: "0 auto 28px" }}>
               Your registration is confirmed. To receive your official event badge and access credentials, please proceed to the EAPCE'27 accreditation system.
             </p>
-            <a
-              href="https://app.eventpass.rw/register/event/DP9GdOp95zBxPY05sb77cHKKCfYCqx3zWiSSnSD5ZKgKApzSvUMktcDgHRDqKqjl"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: "inline-block", background: C.gold, color: C.navy, padding: "15px 40px", borderRadius: 5, fontSize: 15, fontWeight: 900, textDecoration: "none", letterSpacing: 0.3 }}>
-              Proceed to Accreditation →
-            </a>
-            <div style={{ marginTop: 16, fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
-              Powered by EventPass · app.eventpass.rw
-            </div>
+            {!accredDone ? (
+              <>
+                <a
+                  href="https://app.eventpass.rw/register/event/DP9GdOp95zBxPY05sb77cHKKCfYCqx3zWiSSnSD5ZKgKApzSvUMktcDgHRDqKqjl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: "inline-block", background: C.gold, color: C.navy, padding: "15px 40px", borderRadius: 5, fontSize: 15, fontWeight: 900, textDecoration: "none", letterSpacing: 0.3 }}>
+                  Proceed to Accreditation →
+                </a>
+                <div style={{ marginTop: 20 }}>
+                  <button onClick={() => setAccredDone(true)} style={{ background: "transparent", color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.15)", padding: "9px 24px", borderRadius: 4, cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+                    I have completed my accreditation ✓
+                  </button>
+                </div>
+                <div style={{ marginTop: 12, fontSize: 11, color: "rgba(255,255,255,0.25)" }}>
+                  Powered by EventPass · app.eventpass.rw
+                </div>
+              </>
+            ) : (
+              <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.35)", borderRadius: 10, padding: "28px 32px", marginTop: 8 }}>
+                <div style={{ width: 52, height: 52, borderRadius: "50%", background: C.gold, color: C.navy, fontSize: 22, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>✓</div>
+                <h4 style={{ color: C.gold, fontSize: 17, fontWeight: 800, margin: "0 0 10px" }}>Accreditation Complete!</h4>
+                <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, lineHeight: 1.8, margin: "0 0 14px" }}>
+                  Thank you, <strong style={{ color: "#fff" }}>{form.firstName}</strong>. Your accreditation has been received.
+                </p>
+                <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.25)", borderRadius: 8, padding: "16px 20px" }}>
+                  <div style={{ color: C.gold, fontWeight: 800, fontSize: 13, marginBottom: 6 }}>Badge Collection</div>
+                  <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, lineHeight: 1.8 }}>
+                    Your official delegate badge will be available for collection at the<br />
+                    <strong style={{ color: "#fff" }}>Registration Desk — Kigali Convention Centre Foyer</strong><br />
+                    from <strong style={{ color: "#fff" }}>Sunday 8 March 2027, 08:00 EAT</strong> onwards.<br />
+                    Please bring a valid photo ID and your confirmation ID: <strong style={{ color: C.gold }}>{badgeId}</strong>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
