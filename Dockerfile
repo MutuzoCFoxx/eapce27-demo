@@ -1,5 +1,6 @@
 FROM php:8.2-cli
 
+# v4 - bust build cache
 RUN apt-get update && apt-get install -y \
         libpq-dev \
         libzip-dev \
@@ -19,8 +20,8 @@ RUN composer install --no-dev --optimize-autoloader \
 
 EXPOSE 8080
 
-CMD sh -c "php artisan config:cache; \
+CMD sh -c "php artisan view:clear; \
+           php artisan config:cache; \
            php artisan route:cache; \
-           php artisan view:cache; \
            php artisan migrate --force; \
            php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
