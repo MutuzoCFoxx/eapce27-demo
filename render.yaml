@@ -1,14 +1,9 @@
 services:
   - type: web
     name: eapce27-laravel
+    runtime: docker
     plan: free
-    buildCommand: composer install --no-dev --optimize-autoloader
-    startCommand: >
-      php artisan config:cache &&
-      php artisan route:cache &&
-      php artisan view:cache &&
-      php artisan migrate --force &&
-      php artisan serve --host=0.0.0.0 --port=$PORT
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_ENV
         value: production
