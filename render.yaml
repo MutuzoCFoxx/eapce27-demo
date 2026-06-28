@@ -16,7 +16,7 @@ services:
       - key: APP_URL
         value: https://eapce27-laravel.onrender.com
       - key: APP_KEY
-        generateValue: true
+        sync: false
       - key: ADMIN_PASSWORD
         sync: false
       - key: DB_CONNECTION
