@@ -77,16 +77,19 @@
         <div class="section-label">{{ __('messages.what_expect') }}</div>
         <h2 class="section-title">{{ __('messages.expect_title') }}</h2>
         <div class="expect-grid">
-            @foreach([
+            @php
+            $expectItems = [
                 ['⚡','High-Level Plenaries','Heads of State, Ministers and CEOs address strategic energy priorities across the EAC region'],
                 ['🤝','B2B Networking Hub','Structured investor-operator matchmaking sessions with over 200 pre-arranged meetings'],
                 ['🏭','Exhibition Floor','70 booths showcasing the latest in upstream, midstream, and renewable energy technology'],
                 ['📊','Technical Sessions','12 breakout tracks covering upstream regulation, refining, financing, and energy transition'],
                 ['🌍','Country Presentations','All 8 EAC Partner States present petroleum sector updates and investment opportunities'],
                 ['🎓','Ministerial Dialogue','High-level ministerial roundtable on regional energy policy and shared infrastructure'],
-                ['🛢️','Field Excursions','Technical site visits to Rwanda's key energy infrastructure and geological sites'],
+                ['🛢️','Field Excursions','Technical site visits to Rwanda\'s key energy infrastructure and geological sites'],
                 ['🏆','Awards Gala','Annual East African Energy Awards recognising excellence across the value chain'],
-            ] as $ev)
+            ];
+            @endphp
+            @foreach($expectItems as $ev)
             <div class="expect-card">
                 <div class="expect-icon">{{ $ev[0] }}</div>
                 <h3>{{ $ev[1] }}</h3>
