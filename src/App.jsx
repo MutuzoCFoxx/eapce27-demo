@@ -354,11 +354,10 @@ function Nav({ page, setPage }) {
       {/* Top utility bar — language switcher */}
       <div style={{ background: "#060e1c", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "flex-end", alignItems: "center", height: 36, gap: 4 }}>
-          <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 10, marginRight: 8, letterSpacing: 1, textTransform: "uppercase" }}>Language:</span>
           {["en","fr","sw"].map(l => (
             <button key={l} onClick={() => setLang(l)}
               style={{ background: lang === l ? C.gold : "transparent", color: lang === l ? C.navy : "rgba(255,255,255,0.45)", border: `1px solid ${lang === l ? C.gold : "rgba(255,255,255,0.12)"}`, padding: "3px 12px", borderRadius: 3, cursor: "pointer", fontSize: 11, fontWeight: 700, letterSpacing: 0.8, textTransform: "uppercase", transition: "all 0.15s" }}>
-              {l === lang ? langLabels[l] : l.toUpperCase()}
+              {l.toUpperCase()}
             </button>
           ))}
         </div>
