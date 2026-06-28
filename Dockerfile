@@ -1,15 +1,17 @@
-FROM php:8.2-cli-alpine
+FROM php:8.2-cli
 
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
-    oniguruma-dev \
+    libonig-dev \
     libxml2-dev \
     curl \
+    unzip \
     && docker-php-ext-install \
         pdo pdo_pgsql pdo_mysql \
         mbstring xml bcmath zip \
-        tokenizer ctype fileinfo opcache
+        tokenizer ctype fileinfo opcache \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
