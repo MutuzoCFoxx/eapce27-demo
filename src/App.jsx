@@ -346,45 +346,96 @@ function Countdown({ dark }) {
 function Nav({ page, setPage }) {
   const { lang, setLang } = useContext(LangContext);
   const T = TR[lang];
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 960);
+
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth < 960);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
+
+  useEffect(() => { setMenuOpen(false); }, [page]);
+
   const navKeys = ["Home","About","Agenda","Register","Exhibition","Sponsors","Speakers","Venue","Media","Contact"];
   const navKeyMap = { Home:"navHome", About:"navAbout", Agenda:"navAgenda", Register:"navRegister", Exhibition:"navExhibition", Sponsors:"navSponsors", Speakers:"navSpeakers", Venue:"navVenue", Media:"navMedia", Contact:"navContact" };
-  const langLabels = { en: "EN · English", fr: "FR · Français", sw: "SW · Kiswahili" };
+
   return (
     <div style={{ position: "sticky", top: 0, zIndex: 200 }}>
-      {/* Top utility bar — language switcher */}
-      <div style={{ background: "#060e1c", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 24px" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "flex-end", alignItems: "center", height: 36, gap: 4 }}>
+      {/* Language bar */}
+      <div style={{ background: "#060e1c", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 20px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "flex-end", alignItems: "center", height: 34, gap: 4 }}>
           {["en","fr","sw"].map(l => (
             <button key={l} onClick={() => setLang(l)}
-              style={{ background: lang === l ? C.gold : "transparent", color: lang === l ? C.navy : "rgba(255,255,255,0.45)", border: `1px solid ${lang === l ? C.gold : "rgba(255,255,255,0.12)"}`, padding: "3px 12px", borderRadius: 3, cursor: "pointer", fontSize: 11, fontWeight: 700, letterSpacing: 0.8, textTransform: "uppercase", transition: "all 0.15s" }}>
+              style={{ background: lang === l ? C.gold : "transparent", color: lang === l ? C.navy : "rgba(255,255,255,0.45)", border: `1px solid ${lang === l ? C.gold : "rgba(255,255,255,0.12)"}`, padding: "2px 10px", borderRadius: 3, cursor: "pointer", fontSize: 10.5, fontWeight: 700, letterSpacing: 0.8, textTransform: "uppercase" }}>
               {l.toUpperCase()}
             </button>
           ))}
         </div>
       </div>
-      {/* Main nav */}
+
+      {/* Main nav bar */}
       <nav style={{ background: C.navy, boxShadow: "0 2px 20px rgba(0,0,0,0.4)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: 62 }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: 60 }}>
+
+          {/* Logo */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer", flexShrink: 0 }} onClick={() => setPage("Home")}>
             <div style={{ width: 36, height: 36, borderRadius: 5, background: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: C.navy }}>EAC</div>
             <div>
-              <div style={{ color: "#ffffff", fontWeight: 800, fontSize: 14 }}>EAPCE<span style={{ color: C.gold }}>'27</span></div>
+              <div style={{ color: "#fff", fontWeight: 800, fontSize: 14 }}>EAPCE<span style={{ color: C.gold }}>'27</span></div>
               <div style={{ color: "rgba(255,255,255,0.32)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase" }}>Kigali · 9–11 March 2027</div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 0, flexWrap: "wrap", justifyContent: "center" }}>
+
+          {/* Desktop links */}
+          {!isMobile && (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {navKeys.map(p => (
+                <button key={p} onClick={() => setPage(p)}
+                  style={{ background: "transparent", color: page === p ? "#fff" : "rgba(255,255,255,0.5)", border: "none", padding: "6px 9px", cursor: "pointer", fontSize: 11.5, fontWeight: page === p ? 700 : 400, borderBottom: page === p ? `2px solid ${C.gold}` : "2px solid transparent", whiteSpace: "nowrap" }}>
+                  {T[navKeyMap[p]]}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Desktop right buttons */}
+          {!isMobile && (
+            <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+              <button onClick={() => setPage("Register")} style={{ background: C.gold, color: C.navy, border: "none", padding: "8px 16px", borderRadius: 4, cursor: "pointer", fontSize: 12, fontWeight: 800, whiteSpace: "nowrap" }}>{T.registerNow}</button>
+              <button onClick={() => setPage("Admin")} style={{ background: "transparent", color: "rgba(255,255,255,0.22)", border: "1px solid rgba(255,255,255,0.1)", padding: "7px 10px", borderRadius: 4, cursor: "pointer", fontSize: 11 }}>{T.navAdmin}</button>
+            </div>
+          )}
+
+          {/* Mobile: Register + Hamburger */}
+          {isMobile && (
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <button onClick={() => setPage("Register")} style={{ background: C.gold, color: C.navy, border: "none", padding: "7px 14px", borderRadius: 4, cursor: "pointer", fontSize: 12, fontWeight: 800, whiteSpace: "nowrap" }}>{T.registerNow}</button>
+              <button onClick={() => setMenuOpen(o => !o)}
+                aria-label="Menu"
+                style={{ background: menuOpen ? "rgba(201,168,76,0.15)" : "transparent", border: `1px solid ${menuOpen ? C.gold : "rgba(255,255,255,0.15)"}`, padding: "8px 10px", borderRadius: 5, cursor: "pointer", display: "flex", flexDirection: "column", gap: 5, alignItems: "center", justifyContent: "center" }}>
+                <span style={{ display: "block", width: 22, height: 2, background: menuOpen ? C.gold : "#fff", borderRadius: 2, transform: menuOpen ? "rotate(45deg) translateY(7px)" : "none", transition: "all 0.2s" }} />
+                <span style={{ display: "block", width: 22, height: 2, background: menuOpen ? "transparent" : "#fff", borderRadius: 2, opacity: menuOpen ? 0 : 1, transition: "all 0.2s" }} />
+                <span style={{ display: "block", width: 22, height: 2, background: menuOpen ? C.gold : "#fff", borderRadius: 2, transform: menuOpen ? "rotate(-45deg) translateY(-7px)" : "none", transition: "all 0.2s" }} />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile dropdown */}
+        {isMobile && menuOpen && (
+          <div style={{ background: "#08172a", borderTop: `2px solid ${C.gold}` }}>
             {navKeys.map(p => (
               <button key={p} onClick={() => setPage(p)}
-                style={{ background: "transparent", color: page === p ? "#ffffff" : "rgba(255,255,255,0.5)", border: "none", padding: "6px 10px", cursor: "pointer", fontSize: 11.5, fontWeight: page === p ? 700 : 400, borderBottom: page === p ? `2px solid ${C.gold}` : "2px solid transparent", whiteSpace: "nowrap" }}>
+                style={{ display: "block", width: "100%", textAlign: "left", background: page === p ? "rgba(201,168,76,0.1)" : "transparent", color: page === p ? C.gold : "rgba(255,255,255,0.72)", border: "none", borderLeft: page === p ? `4px solid ${C.gold}` : "4px solid transparent", padding: "14px 24px", cursor: "pointer", fontSize: 15, fontWeight: page === p ? 700 : 400, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                 {T[navKeyMap[p]]}
               </button>
             ))}
+            <div style={{ padding: "14px 20px 20px" }}>
+              <button onClick={() => setPage("Admin")} style={{ width: "100%", background: "transparent", color: "rgba(255,255,255,0.35)", border: "1px solid rgba(255,255,255,0.1)", padding: "11px", borderRadius: 5, cursor: "pointer", fontSize: 13 }}>{T.navAdmin}</button>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-            <button onClick={() => setPage("Register")} style={{ background: C.gold, color: C.navy, border: "none", padding: "8px 18px", borderRadius: 4, cursor: "pointer", fontSize: 12, fontWeight: 800, whiteSpace: "nowrap" }}>{T.registerNow}</button>
-            <button onClick={() => setPage("Admin")} style={{ background: "transparent", color: "rgba(255,255,255,0.22)", border: "1px solid rgba(255,255,255,0.1)", padding: "7px 10px", borderRadius: 4, cursor: "pointer", fontSize: 11 }}>{T.navAdmin}</button>
-          </div>
-        </div>
+        )}
       </nav>
     </div>
   );
