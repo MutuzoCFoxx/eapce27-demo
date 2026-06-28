@@ -1,17 +1,191 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+
+// ─── LANGUAGE CONTEXT ────────────────────────────────────────────────────────
+const LangContext = createContext("en");
+
+const TR = {
+  en: {
+    navHome:"Home", navAbout:"About", navAgenda:"Agenda", navRegister:"Register",
+    navExhibition:"Exhibition", navSponsors:"Sponsors", navSpeakers:"Speakers",
+    navVenue:"Venue", navMedia:"Media", navContact:"Contact", navAdmin:"Admin",
+    registerNow:"Register Now",
+    heroTag:"East African Community · Official Event",
+    heroDate:"9–11 March 2027", heroVenue:"Kigali Convention Centre, Rwanda",
+    heroTheme:'"Strategic and Sustainable Oil and Gas Resources Exploitation for Energy Security in EAC"',
+    cta1:"Register Now", cta2:"Book a Booth", cta3:"Become a Sponsor",
+    statDelegates:"Expected Delegates", statBooths:"Exhibition Booths",
+    statStates:"EAC Partner States", statDays:"Conference Days",
+    statDeals:"Projected Deals", statTracks:"Breakout Tracks",
+    expectLabel:"What to Expect", expectTitle:"East Africa's Premier Energy Forum",
+    e1:"High-Level Plenaries", e1d:"Heads of State, Ministers and CEOs address strategic energy priorities across the EAC region",
+    e2:"B2B Deal Meetings", e2d:"Structured one-on-one investor and operator meetings facilitated across all 8 partner states",
+    e3:"Exhibition Floor", e3d:"70 booths showcasing upstream, midstream, downstream and services across KCC halls",
+    e4:"Country Licensing Rounds", e4d:"National oil companies present new acreage and investment opportunities to global majors",
+    e5:"Gala Dinner & Awards", e5d:"Networking dinner celebrating East African energy excellence and project milestones",
+    e6:"Technical Sessions", e6d:"Peer-reviewed papers on upstream regulation, data management, refining and energy transition",
+    e7:"Media & Press Centre", e7d:"Dedicated media hub with live streaming, press briefings and social content studio",
+    e8:"Field Excursions", e8d:"Curated site visits to Rwanda's petroleum and methane gas development sites",
+    speakersLabel:"Confirmed Speakers", speakersTitle:"Distinguished Voices from Across East Africa",
+    speakersNote:"Speaker nominations:", speakersDeadline:"Deadline 31 December 2026",
+    progLabel:"Programme", progTitle:"Conference Agenda at a Glance", viewFull:"View Full Programme",
+    sponsorsLabel:"Partners & Sponsors", sponsorsTitle:"Supporting EAPCE'27",
+    whyLabel:"Host Country", whyTitle:"Why Rwanda & Kigali?",
+    w1:"#1 in Africa", w1d:"Ease of Doing Business (World Bank)",
+    w2:"Well-Connected Hub", w2d:"RwandAir — direct flights to 30+ African cities",
+    w3:"MICE Leader", w3d:"Africa's leading meetings & conventions destination",
+    w4:"Safe & Secure", w4d:"Consistently ranked among Africa's safest nations",
+    w5:"Green City", w5d:"Kigali — Africa's cleanest and most livable city",
+    w6:"Petroleum Potential", w6d:"Emerging upstream sector — Lake Albert basin & methane gas",
+    newsLabel:"News & Media", newsTitle:"Latest Updates", readMore:"Read More",
+    organisedBy:"Organised by",
+    footerLinks:"Quick Links", footerContact:"Contact", footerOrg:"Organisers",
+    days:"Days", hours:"Hours", mins:"Mins", secs:"Secs",
+    agendaTitle:"Conference Programme", agendaSubtitle:"9–11 March 2027 · Kigali Convention Centre, Rwanda",
+    regTitle:"Delegate Registration", regSubtitle:"Secure your place at EAPCE'27 — 9–11 March 2027, Kigali",
+    exhibTitle:"Exhibition & Booth Booking", exhibSubtitle:"70 booths across KCC halls — Platinum, Gold, Silver and Bronze zones",
+    spTitle:"Sponsorship Opportunities", spSubtitle:"Partner with East Africa's premier energy conference — EAPCE'27",
+    spkTitle:"Speakers & Resource Persons", spkSubtitle:"Distinguished experts, ministers and industry leaders from across East Africa and beyond",
+    venueTitle:"Venue & Accommodation", venueSubtitle:"Kigali Convention Centre (KCC) — Heart of Kigali, Rwanda",
+    mediaTitle:"News & Media Centre", mediaSubtitle:"Press releases, media accreditation and communications for EAPCE'27",
+    contactTitle:"Contact Us", contactSubtitle:"Get in touch with the EAPCE'27 team — we're here to help",
+    aboutTag:"About the Conference",
+    step1:"1. Your Details", step2:"2. Payment", step3:"3. Confirmation",
+    regTypeLabel:"Registration Type", personalInfo:"Personal Information",
+    fName:"First Name", lName:"Last Name", emailLbl:"Email Address",
+    orgLbl:"Organisation / Company", countryLbl:"Country", phoneLbl:"Phone Number",
+    dietaryLbl:"Dietary Requirements", hotelLbl:"Hotel Preference",
+    submitPay:"Proceed to Payment", submitFree:"Complete Registration (Free)",
+    orderSum:"Order Summary",
+    contactForm:"Send Us a Message", fullName:"Full Name", subjectLbl:"Subject", messageLbl:"Message",
+    sendBtn:"Send Message", sentTitle:"Message Sent!",
+    adminTitle:"Admin Dashboard", adminSubtitle:"EAPCE'27 — Live Analytics & Registration Management",
+  },
+  fr: {
+    navHome:"Accueil", navAbout:"À propos", navAgenda:"Programme", navRegister:"Inscription",
+    navExhibition:"Exposition", navSponsors:"Sponsors", navSpeakers:"Conférenciers",
+    navVenue:"Lieu", navMedia:"Médias", navContact:"Contact", navAdmin:"Admin",
+    registerNow:"S'inscrire",
+    heroTag:"Communauté d'Afrique de l'Est · Événement officiel",
+    heroDate:"9–11 mars 2027", heroVenue:"Centre des congrès de Kigali, Rwanda",
+    heroTheme:'"Exploitation stratégique et durable des ressources pétrolières pour la sécurité énergétique en EAC"',
+    cta1:"S'inscrire", cta2:"Réserver un stand", cta3:"Devenir sponsor",
+    statDelegates:"Délégués attendus", statBooths:"Stands d'exposition",
+    statStates:"États partenaires EAC", statDays:"Jours de conférence",
+    statDeals:"Transactions prévues", statTracks:"Sessions parallèles",
+    expectLabel:"À quoi s'attendre", expectTitle:"Le premier forum énergétique d'Afrique de l'Est",
+    e1:"Plénières de haut niveau", e1d:"Chefs d'État, ministres et PDG abordent les priorités énergétiques stratégiques de la région EAC",
+    e2:"Réunions B2B", e2d:"Réunions individuelles entre investisseurs et opérateurs dans les 8 États partenaires",
+    e3:"Salon d'exposition", e3d:"70 stands présentant les services pétroliers en amont, intermédiaires et en aval au KCC",
+    e4:"Tours de licences nationales", e4d:"Les compagnies pétrolières nationales présentent de nouvelles opportunités d'investissement",
+    e5:"Dîner de gala & Prix", e5d:"Dîner de networking célébrant l'excellence énergétique est-africaine",
+    e6:"Sessions techniques", e6d:"Communications sur la réglementation pétrolière et la transition énergétique",
+    e7:"Centre médias & presse", e7d:"Hub médias avec streaming en direct, briefings de presse et studio de contenu",
+    e8:"Excursions sur le terrain", e8d:"Visites guidées des sites de développement pétrolier du Rwanda",
+    speakersLabel:"Conférenciers confirmés", speakersTitle:"Voix distinguées d'Afrique de l'Est",
+    speakersNote:"Nominations:", speakersDeadline:"Date limite: 31 décembre 2026",
+    progLabel:"Programme", progTitle:"Programme de la conférence", viewFull:"Voir le programme complet",
+    sponsorsLabel:"Partenaires & Sponsors", sponsorsTitle:"Soutenir EAPCE'27",
+    whyLabel:"Pays hôte", whyTitle:"Pourquoi le Rwanda & Kigali?",
+    w1:"N°1 en Afrique", w1d:"Facilité de faire des affaires (Banque mondiale)",
+    w2:"Hub bien connecté", w2d:"RwandAir — vols directs vers 30+ villes africaines",
+    w3:"Leader MICE", w3d:"Destination de réunions et congrès leader en Afrique",
+    w4:"Sûr & sécurisé", w4d:"Classé parmi les nations les plus sûres d'Afrique",
+    w5:"Ville verte", w5d:"Kigali — la ville la plus propre et vivable d'Afrique",
+    w6:"Potentiel pétrolier", w6d:"Secteur amont émergent — bassin du lac Albert & gaz méthane",
+    newsLabel:"Actualités & Médias", newsTitle:"Dernières mises à jour", readMore:"Lire plus",
+    organisedBy:"Organisé par",
+    footerLinks:"Liens rapides", footerContact:"Contact", footerOrg:"Organisateurs",
+    days:"Jours", hours:"Heures", mins:"Min", secs:"Sec",
+    agendaTitle:"Programme de la conférence", agendaSubtitle:"9–11 mars 2027 · Centre des congrès de Kigali, Rwanda",
+    regTitle:"Inscription des délégués", regSubtitle:"Réservez votre place à EAPCE'27 — 9–11 mars 2027, Kigali",
+    exhibTitle:"Exposition & Réservation de stands", exhibSubtitle:"70 stands dans les salles KCC — zones Platine, Or, Argent et Bronze",
+    spTitle:"Opportunités de sponsoring", spSubtitle:"Partenaire de la première conférence énergétique d'Afrique de l'Est — EAPCE'27",
+    spkTitle:"Conférenciers & Intervenants", spkSubtitle:"Experts, ministres et leaders de l'industrie d'Afrique de l'Est et au-delà",
+    venueTitle:"Lieu & Hébergement", venueSubtitle:"Centre des congrès de Kigali (KCC) — Cœur de Kigali, Rwanda",
+    mediaTitle:"Centre d'actualités & Médias", mediaSubtitle:"Communiqués de presse, accréditation médias et communications pour EAPCE'27",
+    contactTitle:"Contactez-nous", contactSubtitle:"Contactez l'équipe EAPCE'27 — nous sommes là pour vous aider",
+    aboutTag:"À propos de la conférence",
+    step1:"1. Vos informations", step2:"2. Paiement", step3:"3. Confirmation",
+    regTypeLabel:"Type d'inscription", personalInfo:"Informations personnelles",
+    fName:"Prénom", lName:"Nom", emailLbl:"Adresse e-mail",
+    orgLbl:"Organisation / Entreprise", countryLbl:"Pays", phoneLbl:"Numéro de téléphone",
+    dietaryLbl:"Régimes alimentaires", hotelLbl:"Préférence d'hôtel",
+    submitPay:"Procéder au paiement", submitFree:"Finaliser l'inscription (Gratuit)",
+    orderSum:"Récapitulatif de commande",
+    contactForm:"Envoyez-nous un message", fullName:"Nom complet", subjectLbl:"Sujet", messageLbl:"Message",
+    sendBtn:"Envoyer le message", sentTitle:"Message envoyé!",
+    adminTitle:"Tableau de bord Admin", adminSubtitle:"EAPCE'27 — Analyses et gestion des inscriptions",
+  },
+  sw: {
+    navHome:"Nyumbani", navAbout:"Kuhusu", navAgenda:"Ratiba", navRegister:"Jiandikishe",
+    navExhibition:"Maonyesho", navSponsors:"Wadhamini", navSpeakers:"Wasemaji",
+    navVenue:"Mahali", navMedia:"Habari", navContact:"Wasiliana", navAdmin:"Msimamizi",
+    registerNow:"Jiandikishe Sasa",
+    heroTag:"Jumuiya ya Afrika Mashariki · Tukio Rasmi",
+    heroDate:"9–11 Machi 2027", heroVenue:"Kituo cha Mikutano cha Kigali, Rwanda",
+    heroTheme:'"Unyonyaji wa Kimkakati na Endelevu wa Rasilimali za Mafuta kwa Usalama wa Nishati katika JAM"',
+    cta1:"Jiandikishe Sasa", cta2:"Hifadhi Banda", cta3:"Kuwa Mdhamini",
+    statDelegates:"Wawakilishi Watarajiwa", statBooths:"Vibanda vya Maonyesho",
+    statStates:"Nchi Wanachama JAM", statDays:"Siku za Mkutano",
+    statDeals:"Mikataba Inayotarajiwa", statTracks:"Vipindi vya Kikundi",
+    expectLabel:"Nini cha Kutarajia", expectTitle:"Jukwaa Kuu la Nishati la Afrika Mashariki",
+    e1:"Vikao vya Ngazi ya Juu", e1d:"Wakuu wa Nchi, Mawaziri na Wakurugenzi wanashughulikia vipaumbele vya nishati katika JAM",
+    e2:"Mikutano ya B2B", e2d:"Mikutano ya ana kwa ana kati ya wawekezaji na waendeshaji katika nchi wanachama wote 8",
+    e3:"Sakafu ya Maonyesho", e3d:"Vibanda 70 vinavyoonyesha huduma za mafuta kutoka KCC",
+    e4:"Raundi za Leseni za Nchi", e4d:"Makampuni ya mafuta yanawasilisha fursa mpya za uwekezaji kwa makampuni makubwa",
+    e5:"Chakula cha Sherehe & Tuzo", e5d:"Chakula cha usiku kinachoadhimisha ubora wa nishati ya Afrika Mashariki",
+    e6:"Vikao vya Kiufundi", e6d:"Makala kuhusu udhibiti wa mafuta na mpito wa nishati",
+    e7:"Kituo cha Habari & Vyombo vya Habari", e7d:"Kitovu cha habari chenye utiririshaji moja kwa moja na mikutano ya habari",
+    e8:"Ziara za Uwanjani", e8d:"Ziara zilizopangwa katika maeneo ya maendeleo ya mafuta ya Rwanda",
+    speakersLabel:"Wasemaji Waliothibitishwa", speakersTitle:"Sauti Maarufu kutoka Afrika Mashariki",
+    speakersNote:"Nomino:", speakersDeadline:"Mwisho: 31 Desemba 2026",
+    progLabel:"Mpango", progTitle:"Muhtasari wa Ratiba ya Mkutano", viewFull:"Angalia Mpango Kamili",
+    sponsorsLabel:"Washirika & Wadhamini", sponsorsTitle:"Kusaidia EAPCE'27",
+    whyLabel:"Nchi Mwenyeji", whyTitle:"Kwa Nini Rwanda & Kigali?",
+    w1:"Nambari 1 Afrika", w1d:"Urahisi wa Kufanya Biashara (Benki ya Dunia)",
+    w2:"Kitovu Kilichounganishwa", w2d:"RwandAir — ndege za moja kwa moja hadi miji 30+ ya Afrika",
+    w3:"Kiongozi wa MICE", w3d:"Marudio bora ya mikutano na makongamano barani Afrika",
+    w4:"Salama & Usalama", w4d:"Imeorodheshwa kati ya mataifa salama zaidi Afrika",
+    w5:"Mji wa Kijani", w5d:"Kigali — mji safi zaidi na unaofaa kuishi barani Afrika",
+    w6:"Uwezekano wa Mafuta", w6d:"Sekta ya awali inayokua — bonde la Ziwa Albert & gesi methane",
+    newsLabel:"Habari & Vyombo vya Habari", newsTitle:"Masasisho ya Hivi Karibuni", readMore:"Soma Zaidi",
+    organisedBy:"Imepangwa na",
+    footerLinks:"Viungo vya Haraka", footerContact:"Mawasiliano", footerOrg:"Waandaaji",
+    days:"Siku", hours:"Masaa", mins:"Dak", secs:"Sek",
+    agendaTitle:"Mpango wa Mkutano", agendaSubtitle:"9–11 Machi 2027 · Kituo cha Mikutano cha Kigali, Rwanda",
+    regTitle:"Usajili wa Wawakilishi", regSubtitle:"Hifadhi nafasi yako katika EAPCE'27 — 9–11 Machi 2027, Kigali",
+    exhibTitle:"Maonyesho & Uhifadhi wa Banda", exhibSubtitle:"Vibanda 70 katika kumbi za KCC — maeneo ya Platinamu, Dhahabu, Fedha na Shaba",
+    spTitle:"Fursa za Udhamini", spSubtitle:"Shirika na mkutano wa nishati wa Afrika Mashariki — EAPCE'27",
+    spkTitle:"Wasemaji & Wataalamu", spkSubtitle:"Wataalamu, mawaziri na viongozi wa sekta kutoka Afrika Mashariki",
+    venueTitle:"Mahali & Malazi", venueSubtitle:"Kituo cha Mikutano cha Kigali (KCC) — Moyo wa Kigali, Rwanda",
+    mediaTitle:"Kituo cha Habari & Vyombo vya Habari", mediaSubtitle:"Taarifa za vyombo vya habari na mawasiliano ya EAPCE'27",
+    contactTitle:"Wasiliana Nasi", contactSubtitle:"Wasiliana na timu ya EAPCE'27 — tuko hapa kusaidia",
+    aboutTag:"Kuhusu Mkutano",
+    step1:"1. Maelezo Yako", step2:"2. Malipo", step3:"3. Uthibitisho",
+    regTypeLabel:"Aina ya Usajili", personalInfo:"Taarifa za Kibinafsi",
+    fName:"Jina la Kwanza", lName:"Jina la Familia", emailLbl:"Anwani ya Barua pepe",
+    orgLbl:"Shirika / Kampuni", countryLbl:"Nchi", phoneLbl:"Nambari ya Simu",
+    dietaryLbl:"Mahitaji ya Chakula", hotelLbl:"Upendeleo wa Hoteli",
+    submitPay:"Endelea na Malipo", submitFree:"Kamilisha Usajili (Bure)",
+    orderSum:"Muhtasari wa Agizo",
+    contactForm:"Tutumie Ujumbe", fullName:"Jina Kamili", subjectLbl:"Mada", messageLbl:"Ujumbe",
+    sendBtn:"Tuma Ujumbe", sentTitle:"Ujumbe Umetumwa!",
+    adminTitle:"Dashibodi ya Msimamizi", adminSubtitle:"EAPCE'27 — Takwimu za Moja kwa Moja na Usimamizi wa Usajili",
+  },
+};
 
 // ─── PALETTE ────────────────────────────────────────────────────────────────
 const C = {
-  navy: "#0a2540",
-  navyMid: "#0d3260",
-  blue: "#1a5276",
+  navy: "#0c1f35",
+  navyMid: "#122944",
+  blue: "#1a4a6e",
   gold: "#c9a84c",
   goldLight: "#f5ecd4",
   green: "#1a6b3a",
   greenLight: "#e8f5ee",
   white: "#ffffff",
-  offWhite: "#f8fafc",
+  offWhite: "#f7f8fa",
   gray: "#64748b",
   lightGray: "#e2e8f0",
   text: "#0f172a",
@@ -146,6 +320,8 @@ const PAGES = ["Home", "About", "Agenda", "Register", "Exhibition", "Sponsors", 
 
 // ─── COUNTDOWN ───────────────────────────────────────────────────────────────
 function Countdown({ dark }) {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   const target = new Date("2027-03-09T08:00:00");
   const [diff, setDiff] = useState(target - Date.now());
   useEffect(() => { const t = setInterval(() => setDiff(target - Date.now()), 1000); return () => clearInterval(t); }, []);
@@ -155,116 +331,126 @@ function Countdown({ dark }) {
   const s = Math.max(0, Math.floor((diff % 60000) / 1000));
   const Box = ({ v, label }) => (
     <div style={{ textAlign: "center" }}>
-      <div style={{ background: dark ? "rgba(255,255,255,0.12)" : C.navy, borderRadius: 8, padding: "12px 20px", fontSize: 34, fontWeight: 800, color: "#fff", letterSpacing: 2, fontVariantNumeric: "tabular-nums", minWidth: 72, border: `1px solid ${dark ? "rgba(255,255,255,0.2)" : "transparent"}` }}>{String(v).padStart(2, "0")}</div>
-      <div style={{ color: dark ? "rgba(255,255,255,0.55)" : C.gray, fontSize: 10, marginTop: 6, textTransform: "uppercase", letterSpacing: 2 }}>{label}</div>
+      <div style={{ background: dark ? "rgba(255,255,255,0.08)" : C.navy, borderRadius: 6, padding: "14px 22px", fontSize: 38, fontWeight: 900, color: "#fff", letterSpacing: 3, fontVariantNumeric: "tabular-nums", minWidth: 80, border: `1px solid ${dark ? "rgba(255,255,255,0.12)" : "transparent"}` }}>{String(v).padStart(2, "0")}</div>
+      <div style={{ color: dark ? "rgba(255,255,255,0.45)" : C.gray, fontSize: 9.5, marginTop: 7, textTransform: "uppercase", letterSpacing: 2.5, fontWeight: 600 }}>{label}</div>
     </div>
   );
   return (
     <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-      <Box v={d} label="Days" /><Box v={h} label="Hours" /><Box v={m} label="Mins" /><Box v={s} label="Secs" />
+      <Box v={d} label={T.days} /><Box v={h} label={T.hours} /><Box v={m} label={T.mins} /><Box v={s} label={T.secs} />
     </div>
   );
 }
 
 // ─── NAV ─────────────────────────────────────────────────────────────────────
 function Nav({ page, setPage }) {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
+  const { lang, setLang } = useContext(LangContext);
+  const T = TR[lang];
+  const navKeys = ["Home","About","Agenda","Register","Exhibition","Sponsors","Speakers","Venue","Media","Contact"];
+  const navKeyMap = { Home:"navHome", About:"navAbout", Agenda:"navAgenda", Register:"navRegister", Exhibition:"navExhibition", Sponsors:"navSponsors", Speakers:"navSpeakers", Venue:"navVenue", Media:"navMedia", Contact:"navContact" };
+  const langLabels = { en: "EN · English", fr: "FR · Français", sw: "SW · Kiswahili" };
   return (
-    <nav style={{ background: scrolled ? "rgba(10,37,64,0.98)" : C.navy, backdropFilter: "blur(10px)", borderBottom: `2px solid ${C.gold}`, position: "sticky", top: 0, zIndex: 200, transition: "background 0.3s" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: 64 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }} onClick={() => setPage("Home")}>
-          <div style={{ width: 40, height: 40, borderRadius: 8, background: `linear-gradient(135deg, ${C.gold}, #e8c96a)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 900, color: C.navy }}>EAC</div>
-          <div>
-            <div style={{ color: C.gold, fontWeight: 800, fontSize: 15, letterSpacing: 0.5 }}>EAPCE'27</div>
-            <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 9, letterSpacing: 1, textTransform: "uppercase" }}>Kigali · 9–11 March 2027</div>
-          </div>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
-          {PAGES.filter(p => p !== "Admin").map(p => (
-            <button key={p} onClick={() => setPage(p)}
-              style={{ background: "transparent", color: page === p ? C.gold : "rgba(255,255,255,0.72)", border: "none", padding: "8px 12px", cursor: "pointer", fontSize: 12, fontWeight: page === p ? 700 : 400, borderBottom: page === p ? `2px solid ${C.gold}` : "2px solid transparent" }}>
-              {p}
+    <div style={{ position: "sticky", top: 0, zIndex: 200 }}>
+      {/* Top utility bar — language switcher */}
+      <div style={{ background: "#060e1c", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 24px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "flex-end", alignItems: "center", height: 36, gap: 4 }}>
+          <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 10, marginRight: 8, letterSpacing: 1, textTransform: "uppercase" }}>Language:</span>
+          {["en","fr","sw"].map(l => (
+            <button key={l} onClick={() => setLang(l)}
+              style={{ background: lang === l ? C.gold : "transparent", color: lang === l ? C.navy : "rgba(255,255,255,0.45)", border: `1px solid ${lang === l ? C.gold : "rgba(255,255,255,0.12)"}`, padding: "3px 12px", borderRadius: 3, cursor: "pointer", fontSize: 11, fontWeight: 700, letterSpacing: 0.8, textTransform: "uppercase", transition: "all 0.15s" }}>
+              {l === lang ? langLabels[l] : l.toUpperCase()}
             </button>
           ))}
-          <button onClick={() => setPage("Register")} style={{ marginLeft: 12, background: C.gold, color: C.navy, border: "none", padding: "9px 20px", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 800 }}>Register Now</button>
-          <button onClick={() => setPage("Admin")} style={{ marginLeft: 6, background: "transparent", color: "rgba(255,255,255,0.3)", border: "1px solid rgba(255,255,255,0.12)", padding: "8px 10px", borderRadius: 6, cursor: "pointer", fontSize: 10 }}>🔒</button>
         </div>
       </div>
-    </nav>
+      {/* Main nav */}
+      <nav style={{ background: C.navy, boxShadow: "0 2px 20px rgba(0,0,0,0.4)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: 62 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer", flexShrink: 0 }} onClick={() => setPage("Home")}>
+            <div style={{ width: 36, height: 36, borderRadius: 5, background: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: C.navy }}>EAC</div>
+            <div>
+              <div style={{ color: "#ffffff", fontWeight: 800, fontSize: 14 }}>EAPCE<span style={{ color: C.gold }}>'27</span></div>
+              <div style={{ color: "rgba(255,255,255,0.32)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase" }}>Kigali · 9–11 March 2027</div>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 0, flexWrap: "wrap", justifyContent: "center" }}>
+            {navKeys.map(p => (
+              <button key={p} onClick={() => setPage(p)}
+                style={{ background: "transparent", color: page === p ? "#ffffff" : "rgba(255,255,255,0.5)", border: "none", padding: "6px 10px", cursor: "pointer", fontSize: 11.5, fontWeight: page === p ? 700 : 400, borderBottom: page === p ? `2px solid ${C.gold}` : "2px solid transparent", whiteSpace: "nowrap" }}>
+                {T[navKeyMap[p]]}
+              </button>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+            <button onClick={() => setPage("Register")} style={{ background: C.gold, color: C.navy, border: "none", padding: "8px 18px", borderRadius: 4, cursor: "pointer", fontSize: 12, fontWeight: 800, whiteSpace: "nowrap" }}>{T.registerNow}</button>
+            <button onClick={() => setPage("Admin")} style={{ background: "transparent", color: "rgba(255,255,255,0.22)", border: "1px solid rgba(255,255,255,0.1)", padding: "7px 10px", borderRadius: 4, cursor: "pointer", fontSize: 11 }}>{T.navAdmin}</button>
+          </div>
+        </div>
+      </nav>
+    </div>
   );
 }
 
 // ─── HOME ────────────────────────────────────────────────────────────────────
 function HomePage({ setPage }) {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   return (
     <div>
       {/* HERO */}
-      <div style={{ background: `linear-gradient(160deg, #050e1a 0%, #0a2540 40%, #0d3d2a 100%)`, padding: "80px 24px 70px", textAlign: "center", position: "relative", overflow: "hidden", minHeight: 540, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 700, height: 700, borderRadius: "50%", border: "1px solid rgba(201,168,76,0.08)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 480, height: 480, borderRadius: "50%", border: "1px solid rgba(201,168,76,0.13)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 20% 60%, rgba(26,106,58,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 30%, rgba(201,168,76,0.1) 0%, transparent 50%)", pointerEvents: "none" }} />
-        <div style={{ position: "relative", maxWidth: 860, margin: "0 auto" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)", borderRadius: 24, padding: "6px 18px", marginBottom: 28 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.gold, display: "inline-block" }} />
-            <span style={{ color: C.gold, fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" }}>East African Community · Official Event</span>
+      <div style={{ background: `linear-gradient(170deg, #050c18 0%, #0c1f35 45%, #0a2a1e 100%)`, padding: "100px 24px 90px", textAlign: "center", position: "relative", overflow: "hidden", minHeight: 680, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 15% 70%, rgba(12,90,45,0.18) 0%, transparent 55%), radial-gradient(ellipse at 85% 25%, rgba(201,168,76,0.08) 0%, transparent 50%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 800, height: 800, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.03)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 520, height: 520, borderRadius: "50%", border: "1px solid rgba(201,168,76,0.06)", pointerEvents: "none" }} />
+        <div style={{ position: "relative", maxWidth: 880, margin: "0 auto" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(201,168,76,0.12)", border: "1px solid rgba(201,168,76,0.35)", borderRadius: 4, padding: "7px 20px", marginBottom: 36 }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: C.gold, display: "inline-block", flexShrink: 0 }} />
+            <span style={{ color: C.gold, fontSize: 10.5, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" }}>{T.heroTag}</span>
           </div>
-          <h1 style={{ color: "#fff", fontSize: "clamp(28px,5.5vw,56px)", fontWeight: 900, margin: "0 0 12px", lineHeight: 1.1, letterSpacing: -1 }}>
+          <h1 style={{ color: "#fff", fontSize: "clamp(32px,5.8vw,62px)", fontWeight: 900, margin: "0 0 14px", lineHeight: 1.07, letterSpacing: -1.5 }}>
             12th East African<br />Petroleum Conference<br /><span style={{ color: C.gold }}>&amp; Exhibition</span>
           </h1>
-          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, fontStyle: "italic", margin: "16px 0 10px" }}>
-            "Strategic and Sustainable Oil and Gas Resources Exploitation for Energy Security in EAC"
-          </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 20, margin: "20px 0 36px", flexWrap: "wrap" }}>
-            <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}><span style={{ color: C.gold }}>📅</span> 9–11 March 2027</span>
-            <div style={{ width: 1, height: 16, background: "rgba(255,255,255,0.2)" }} />
-            <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}><span style={{ color: C.gold }}>📍</span> Kigali Convention Centre, Rwanda</span>
+          <p style={{ color: "rgba(255,255,255,0.42)", fontSize: 14, fontStyle: "italic", margin: "20px 0 14px", letterSpacing: 0.2 }}>{T.heroTheme}</p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 24, margin: "22px 0 40px", flexWrap: "wrap" }}>
+            <span style={{ color: "rgba(255,255,255,0.75)", fontSize: 14, fontWeight: 500, letterSpacing: 0.3 }}>{T.heroDate}</span>
+            <div style={{ width: 1, height: 16, background: "rgba(255,255,255,0.18)" }} />
+            <span style={{ color: "rgba(255,255,255,0.75)", fontSize: 14, fontWeight: 500, letterSpacing: 0.3 }}>{T.heroVenue}</span>
           </div>
           <Countdown dark />
-          <div style={{ marginTop: 40, display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <button onClick={() => setPage("Register")} style={{ background: C.gold, color: C.navy, border: "none", padding: "16px 36px", borderRadius: 6, fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 24px rgba(201,168,76,0.35)" }}>Get Your Pass →</button>
-            <button onClick={() => setPage("Exhibition")} style={{ background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,0.35)", padding: "16px 36px", borderRadius: 6, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Book a Booth</button>
-            <button onClick={() => setPage("Sponsors")} style={{ background: "transparent", color: C.gold, border: "2px solid rgba(201,168,76,0.4)", padding: "16px 36px", borderRadius: 6, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Sponsor EAPCE'27</button>
+          <div style={{ marginTop: 44, display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <button onClick={() => setPage("Register")} style={{ background: C.gold, color: C.navy, border: "none", padding: "17px 40px", borderRadius: 5, fontSize: 15, fontWeight: 800, cursor: "pointer", letterSpacing: 0.3 }}>{T.cta1}</button>
+            <button onClick={() => setPage("Exhibition")} style={{ background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,0.3)", padding: "17px 36px", borderRadius: 5, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>{T.cta2}</button>
+            <button onClick={() => setPage("Sponsors")} style={{ background: "transparent", color: C.gold, border: `2px solid rgba(201,168,76,0.38)`, padding: "17px 36px", borderRadius: 5, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>{T.cta3}</button>
           </div>
         </div>
       </div>
 
       {/* STATS BAR */}
-      <div style={{ background: C.gold, padding: "20px 24px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 12 }}>
-          {[["1,000+", "Expected Delegates"], ["70", "Exhibition Booths"], ["8", "EAC Partner States"], ["3", "Conference Days"], ["USD 2B+", "Projected Deals"], ["4", "Breakout Tracks"]].map(([v, l]) => (
+      <div style={{ background: C.navyMid, borderBottom: `3px solid ${C.gold}`, padding: "28px 24px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 16 }}>
+          {[["1,000+", T.statDelegates], ["70", T.statBooths], ["8", T.statStates], ["3", T.statDays], ["USD 2B+", T.statDeals], ["4", T.statTracks]].map(([v, l]) => (
             <div key={l} style={{ textAlign: "center" }}>
-              <div style={{ color: C.navy, fontSize: 22, fontWeight: 900, letterSpacing: -0.5 }}>{v}</div>
-              <div style={{ color: "rgba(10,37,64,0.65)", fontSize: 10, textTransform: "uppercase", letterSpacing: 1.5, marginTop: 2 }}>{l}</div>
+              <div style={{ color: C.gold, fontSize: 26, fontWeight: 900, letterSpacing: -0.5 }}>{v}</div>
+              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10, textTransform: "uppercase", letterSpacing: 2, marginTop: 4 }}>{l}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* WHAT TO EXPECT */}
-      <div style={{ background: C.offWhite, padding: "64px 24px" }}>
+      <div style={{ background: C.offWhite, padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <SectionLabel>What to Expect</SectionLabel>
-          <SectionTitle>East Africa's Premier Energy Forum</SectionTitle>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20, marginTop: 36 }}>
+          <SectionLabel>{T.expectLabel}</SectionLabel>
+          <SectionTitle>{T.expectTitle}</SectionTitle>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 22, marginTop: 44 }}>
             {[
-              ["🎤", "High-Level Plenaries", "Heads of State, Ministers and CEOs address strategic energy priorities across the EAC region"],
-              ["🤝", "B2B Deal Meetings", "Structured one-on-one investor and operator meetings facilitated across all 8 partner states"],
-              ["🏭", "Exhibition Floor", "70 booths showcasing upstream, midstream, downstream and services across KCC halls"],
-              ["🌍", "Country Licensing Rounds", "National oil companies present new acreage and investment opportunities to global majors"],
-              ["🍽️", "Gala Dinner & Awards", "Networking dinner celebrating East African energy excellence and project milestones"],
-              ["📊", "Technical Sessions", "Peer-reviewed papers on upstream regulation, data management, refining and energy transition"],
-              ["📰", "Media & Press Centre", "Dedicated media hub with live streaming, press briefings and social content studio"],
-              ["✈️", "Field Excursions", "Curated site visits to Rwanda's petroleum and methane gas development sites"],
-            ].map(([icon, title, desc]) => (
-              <div key={title} style={{ background: "#fff", borderRadius: 10, padding: "24px 20px", border: `1px solid ${C.lightGray}`, borderTop: `3px solid ${C.gold}` }}>
-                <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
-                <div style={{ fontWeight: 700, color: C.text, fontSize: 14, marginBottom: 8 }}>{title}</div>
-                <div style={{ color: C.gray, fontSize: 12, lineHeight: 1.6 }}>{desc}</div>
+              ["01", T.e1, T.e1d], ["02", T.e2, T.e2d], ["03", T.e3, T.e3d], ["04", T.e4, T.e4d],
+              ["05", T.e5, T.e5d], ["06", T.e6, T.e6d], ["07", T.e7, T.e7d], ["08", T.e8, T.e8d],
+            ].map(([num, title, desc]) => (
+              <div key={title} style={{ background: "#fff", borderRadius: 10, padding: "28px 24px", boxShadow: "0 2px 16px rgba(0,0,0,0.07)", borderTop: `3px solid ${C.gold}` }}>
+                <div style={{ fontSize: 13, fontWeight: 900, color: C.gold, letterSpacing: 1, marginBottom: 14 }}>{num}</div>
+                <div style={{ fontWeight: 700, color: C.text, fontSize: 15, marginBottom: 10 }}>{title}</div>
+                <div style={{ color: C.gray, fontSize: 13, lineHeight: 1.7 }}>{desc}</div>
               </div>
             ))}
           </div>
@@ -272,31 +458,31 @@ function HomePage({ setPage }) {
       </div>
 
       {/* FEATURED SPEAKERS */}
-      <div style={{ background: C.navy, padding: "64px 24px" }}>
+      <div style={{ background: C.navy, padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <SectionLabel light>Confirmed Speakers</SectionLabel>
-          <SectionTitle light>Distinguished Voices from Across East Africa</SectionTitle>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16, marginTop: 36 }}>
+          <SectionLabel light>{T.speakersLabel}</SectionLabel>
+          <SectionTitle light>{T.speakersTitle}</SectionTitle>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(210px,1fr))", gap: 20, marginTop: 48 }}>
             {SPEAKERS.map(s => (
-              <div key={s.name} style={{ background: "rgba(255,255,255,0.05)", borderRadius: 10, padding: "20px 16px", border: "1px solid rgba(255,255,255,0.1)", textAlign: "center" }}>
-                <div style={{ width: 64, height: 64, borderRadius: "50%", background: s.color, color: "#fff", fontSize: 20, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px", border: `3px solid ${C.gold}` }}>{s.initials}</div>
-                <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 4 }}>{s.name}</div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", lineHeight: 1.4, marginBottom: 8 }}>{s.role}</div>
-                <span style={{ background: "rgba(201,168,76,0.15)", color: C.gold, padding: "3px 10px", borderRadius: 12, fontSize: 10, fontWeight: 700, border: "1px solid rgba(201,168,76,0.3)" }}>🌍 {s.country}</span>
+              <div key={s.name} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "28px 20px", border: "1px solid rgba(255,255,255,0.08)", textAlign: "center" }}>
+                <div style={{ width: 86, height: 86, borderRadius: "50%", background: s.color, color: "#fff", fontSize: 24, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px", border: `3px solid ${C.gold}` }}>{s.initials}</div>
+                <div style={{ fontWeight: 700, color: "#fff", fontSize: 14, marginBottom: 6 }}>{s.name}</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.5, marginBottom: 12 }}>{s.role}</div>
+                <span style={{ background: "rgba(201,168,76,0.12)", color: C.gold, padding: "4px 12px", borderRadius: 4, fontSize: 10.5, fontWeight: 700, letterSpacing: 0.5 }}>{s.country}</span>
               </div>
             ))}
           </div>
-          <div style={{ textAlign: "center", marginTop: 28, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>
-            Speaker nominations: <strong style={{ color: "rgba(255,255,255,0.6)" }}>abstracts@eapce27.rw</strong> · Deadline Dec 31, 2026
+          <div style={{ textAlign: "center", marginTop: 36, fontSize: 13, color: "rgba(255,255,255,0.3)" }}>
+            {T.speakersNote} <strong style={{ color: "rgba(255,255,255,0.55)" }}>abstracts@eapce27.rw</strong> · {T.speakersDeadline}
           </div>
         </div>
       </div>
 
       {/* AGENDA PREVIEW */}
-      <div style={{ background: "#fff", padding: "64px 24px" }}>
+      <div style={{ background: "#fff", padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <SectionLabel>Programme</SectionLabel>
-          <SectionTitle>Conference Agenda at a Glance</SectionTitle>
+          <SectionLabel>{T.progLabel}</SectionLabel>
+          <SectionTitle>{T.progTitle}</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 16, marginTop: 36 }}>
             {[
               { day: "Mar 8", label: "Pre-Conference", items: ["NOC/Steering Committee", "Technical Workshop", "Welcome Reception"], color: C.blue },
@@ -320,16 +506,16 @@ function HomePage({ setPage }) {
             ))}
           </div>
           <div style={{ textAlign: "center", marginTop: 28 }}>
-            <button onClick={() => {}} style={{ background: C.navy, color: "#fff", border: "none", padding: "12px 28px", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>View Full Programme →</button>
+            <button onClick={() => {}} style={{ background: C.navy, color: "#fff", border: "none", padding: "12px 28px", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>{T.viewFull} →</button>
           </div>
         </div>
       </div>
 
       {/* SPONSORS */}
-      <div style={{ background: C.offWhite, padding: "64px 24px" }}>
+      <div style={{ background: C.offWhite, padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <SectionLabel>Partners & Sponsors</SectionLabel>
-          <SectionTitle>Supporting EAPCE'27</SectionTitle>
+          <SectionLabel>{T.sponsorsLabel}</SectionLabel>
+          <SectionTitle>{T.sponsorsTitle}</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))", gap: 16, marginTop: 36 }}>
             {SPONSORS.map(s => (
               <div key={s.tier} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.lightGray}`, overflow: "hidden" }}>
@@ -355,24 +541,20 @@ function HomePage({ setPage }) {
       </div>
 
       {/* WHY RWANDA */}
-      <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, #0d3d2a 100%)`, padding: "64px 24px" }}>
+      <div style={{ background: `linear-gradient(160deg, #071525 0%, ${C.navy} 55%, #081e12 100%)`, padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <SectionLabel light>Host Country</SectionLabel>
-          <SectionTitle light>Why Rwanda &amp; Kigali?</SectionTitle>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 20, marginTop: 36 }}>
+          <SectionLabel light>{T.whyLabel}</SectionLabel>
+          <SectionTitle light>{T.whyTitle}</SectionTitle>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 24, marginTop: 48 }}>
             {[
-              ["🌐", "#1 in Africa", "Ease of Doing Business (World Bank)"],
-              ["✈️", "Well-Connected Hub", "RwandAir — direct flights to 30+ African cities"],
-              ["🏆", "MICE Leader", "Africa's leading meetings & conventions destination"],
-              ["🔒", "Safe & Secure", "Consistently ranked among Africa's safest nations"],
-              ["🌿", "Green City", "Kigali — Africa's cleanest and most livable city"],
-              ["⛽", "Petroleum Potential", "Emerging upstream sector — Lake Albert basin & methane gas"],
-            ].map(([icon, title, desc]) => (
-              <div key={title} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-                <span style={{ fontSize: 26, flexShrink: 0 }}>{icon}</span>
+              [T.w1, T.w1d], [T.w2, T.w2d], [T.w3, T.w3d],
+              [T.w4, T.w4d], [T.w5, T.w5d], [T.w6, T.w6d],
+            ].map(([title, desc]) => (
+              <div key={title} style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.gold, flexShrink: 0, marginTop: 6 }} />
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: C.gold }}>{title}</div>
-                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginTop: 4, lineHeight: 1.5 }}>{desc}</div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: "#ffffff" }}>{title}</div>
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.52)", marginTop: 5, lineHeight: 1.6 }}>{desc}</div>
                 </div>
               </div>
             ))}
@@ -381,21 +563,21 @@ function HomePage({ setPage }) {
       </div>
 
       {/* NEWS */}
-      <div style={{ background: "#fff", padding: "64px 24px" }}>
+      <div style={{ background: "#fff", padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <SectionLabel>News &amp; Media</SectionLabel>
-          <SectionTitle>Latest Updates</SectionTitle>
+          <SectionLabel>{T.newsLabel}</SectionLabel>
+          <SectionTitle>{T.newsTitle}</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 20, marginTop: 36 }}>
             {PRESS_RELEASES.map((pr, i) => (
-              <div key={pr.title} style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${C.lightGray}` }}>
-                <div style={{ height: 100, background: `linear-gradient(135deg, hsl(${210 + i * 25},55%,${22 + i * 4}%) 0%, hsl(${140 + i * 20},45%,${18 + i * 4}%) 100%)`, display: "flex", alignItems: "flex-end", padding: "12px 16px" }}>
-                  <span style={{ background: C.gold, color: C.navy, padding: "3px 10px", borderRadius: 12, fontSize: 10, fontWeight: 800 }}>{pr.tag}</span>
+              <div key={pr.title} style={{ borderRadius: 10, overflow: "hidden", boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}>
+                <div style={{ height: 110, background: `linear-gradient(135deg, hsl(${210 + i * 25},60%,${16 + i * 3}%) 0%, hsl(${140 + i * 20},50%,${13 + i * 3}%) 100%)`, display: "flex", alignItems: "flex-end", padding: "14px 18px" }}>
+                  <span style={{ background: C.gold, color: C.navy, padding: "4px 12px", borderRadius: 4, fontSize: 10, fontWeight: 800, letterSpacing: 0.5 }}>{pr.tag}</span>
                 </div>
-                <div style={{ padding: "18px 20px" }}>
-                  <div style={{ fontSize: 10, color: C.gray, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>{pr.date}</div>
-                  <div style={{ fontWeight: 700, color: C.text, fontSize: 14, marginBottom: 8, lineHeight: 1.4 }}>{pr.title}</div>
-                  <div style={{ fontSize: 12, color: C.gray, lineHeight: 1.6, marginBottom: 14 }}>{pr.summary.slice(0, 100)}…</div>
-                  <button style={{ background: "transparent", border: `1px solid ${C.navy}`, color: C.navy, padding: "6px 14px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Read More →</button>
+                <div style={{ padding: "22px 24px", background: "#fff" }}>
+                  <div style={{ fontSize: 10.5, color: C.gray, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600 }}>{pr.date}</div>
+                  <div style={{ fontWeight: 800, color: C.text, fontSize: 15, marginBottom: 10, lineHeight: 1.4 }}>{pr.title}</div>
+                  <div style={{ fontSize: 13, color: C.gray, lineHeight: 1.7, marginBottom: 18 }}>{pr.summary.slice(0, 110)}…</div>
+                  <button style={{ background: "transparent", border: `1.5px solid ${C.navy}`, color: C.navy, padding: "8px 18px", borderRadius: 5, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>{T.readMore}</button>
                 </div>
               </div>
             ))}
@@ -406,7 +588,7 @@ function HomePage({ setPage }) {
       {/* ORGANIZERS */}
       <div style={{ background: C.offWhite, padding: "36px 24px", borderTop: `1px solid ${C.lightGray}` }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: 10, color: C.gray, textTransform: "uppercase", letterSpacing: 2, marginBottom: 20 }}>Organised by</div>
+          <div style={{ fontSize: 10, color: C.gray, textTransform: "uppercase", letterSpacing: 2, marginBottom: 20 }}>{T.organisedBy}</div>
           <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
             {["Rwanda Convention Bureau (RCB)", "Rwanda Mines, Petroleum & Gas Board (RMB)", "East African Community (EAC)"].map(org => (
               <div key={org} style={{ background: "#fff", border: `1px solid ${C.lightGray}`, borderRadius: 8, padding: "12px 20px", fontSize: 12, fontWeight: 700, color: C.navy }}>{org}</div>
@@ -420,10 +602,12 @@ function HomePage({ setPage }) {
 
 // ─── AGENDA PAGE ─────────────────────────────────────────────────────────────
 function AgendaPage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   const days = Object.keys(AGENDA);
   const [active, setActive] = useState(days[0]);
   return (
-    <PageWrap title="Conference Programme" subtitle="9–11 March 2027 · Kigali Convention Centre, Rwanda">
+    <PageWrap title={T.agendaTitle} subtitle={T.agendaSubtitle}>
       <div style={{ display: "flex", gap: 8, marginBottom: 28, flexWrap: "wrap", borderBottom: `2px solid ${C.lightGray}`, paddingBottom: 16 }}>
         {days.map(d => (
           <button key={d} onClick={() => setActive(d)} style={{ background: active === d ? C.navy : "#fff", color: active === d ? "#fff" : C.navy, border: `2px solid ${active === d ? C.navy : C.lightGray}`, padding: "9px 18px", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>{d}</button>
@@ -455,6 +639,8 @@ function AgendaPage() {
 
 // ─── REGISTER PAGE ────────────────────────────────────────────────────────────
 function RegisterPage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   const [step, setStep] = useState(1);
   const [regType, setRegType] = useState(REGISTRATION_TYPES[0]);
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", org: "", country: "", phone: "", dietary: "", hotel: "" });
@@ -493,9 +679,9 @@ function RegisterPage() {
   );
 
   return (
-    <PageWrap title="Delegate Registration" subtitle="Secure your place at EAPCE'27 — 9–11 March 2027, Kigali">
+    <PageWrap title={T.regTitle} subtitle={T.regSubtitle}>
       <div style={{ display: "flex", gap: 0, marginBottom: 36, borderRadius: 8, overflow: "hidden", border: `1px solid ${C.lightGray}` }}>
-        {["1. Your Details", "2. Payment", "3. Confirmation"].map((s, i) => (
+        {[T.step1, T.step2, T.step3].map((s, i) => (
           <div key={s} style={{ flex: 1, padding: "12px 8px", background: step === i + 1 ? C.navy : step > i + 1 ? C.green : C.offWhite, color: step >= i + 1 ? "#fff" : C.gray, textAlign: "center", fontSize: 12, fontWeight: 700, borderRight: i < 2 ? `1px solid ${C.lightGray}` : "none" }}>
             {step > i + 1 ? "✓ " : ""}{s}
           </div>
@@ -505,7 +691,7 @@ function RegisterPage() {
       {step === 1 && (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 28, alignItems: "start" }}>
           <div style={{ background: "#fff", borderRadius: 12, padding: 28, border: `1px solid ${C.lightGray}` }}>
-            <h3 style={{ margin: "0 0 20px", color: C.navy, fontSize: 16 }}>Registration Type</h3>
+            <h3 style={{ margin: "0 0 20px", color: C.navy, fontSize: 16 }}>{T.regTypeLabel}</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 28 }}>
               {REGISTRATION_TYPES.map(rt => (
                 <label key={rt.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 8, border: `2px solid ${regType.id === rt.id ? C.navy : C.lightGray}`, cursor: "pointer", background: regType.id === rt.id ? "#f0f6ff" : "#fff" }}>
@@ -515,33 +701,33 @@ function RegisterPage() {
                 </label>
               ))}
             </div>
-            <h3 style={{ margin: "0 0 20px", color: C.navy, fontSize: 16 }}>Personal Information</h3>
+            <h3 style={{ margin: "0 0 20px", color: C.navy, fontSize: 16 }}>{T.personalInfo}</h3>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-              <F label="First Name" name="firstName" required /><F label="Last Name" name="lastName" required />
+              <F label={T.fName} name="firstName" required /><F label={T.lName} name="lastName" required />
             </div>
-            <F label="Email Address" name="email" type="email" required />
-            <F label="Organisation / Company" name="org" required />
-            <F label="Country" name="country" required />
-            <F label="Phone Number" name="phone" />
+            <F label={T.emailLbl} name="email" type="email" required />
+            <F label={T.orgLbl} name="org" required />
+            <F label={T.countryLbl} name="country" required />
+            <F label={T.phoneLbl} name="phone" />
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.5 }}>Dietary Requirements</label>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.5 }}>{T.dietaryLbl}</label>
               <select value={form.dietary} onChange={e => setForm(f => ({ ...f, dietary: e.target.value }))} style={{ width: "100%", padding: "10px 14px", border: `1.5px solid ${C.lightGray}`, borderRadius: 6, fontSize: 14 }}>
                 <option value="">None</option><option>Vegetarian</option><option>Vegan</option><option>Halal</option><option>Gluten-Free</option>
               </select>
             </div>
             <div style={{ marginBottom: 24 }}>
-              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.5 }}>Hotel Preference</label>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.5 }}>{T.hotelLbl}</label>
               <select value={form.hotel} onChange={e => setForm(f => ({ ...f, hotel: e.target.value }))} style={{ width: "100%", padding: "10px 14px", border: `1.5px solid ${C.lightGray}`, borderRadius: 6, fontSize: 14 }}>
                 <option value="">No preference / self-arranged</option>
                 {HOTELS.map(h => <option key={h.name}>{h.name} ({h.rate})</option>)}
               </select>
             </div>
             <button onClick={handleSubmit} style={{ width: "100%", background: C.navy, color: "#fff", border: "none", padding: "15px", borderRadius: 8, fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
-              {regType.price > 0 ? `Proceed to Payment — USD ${regType.price} →` : "Complete Registration (Free) →"}
+              {regType.price > 0 ? `${T.submitPay} — USD ${regType.price} →` : `${T.submitFree} →`}
             </button>
           </div>
           <div style={{ background: C.navy, borderRadius: 12, padding: 24, position: "sticky", top: 80 }}>
-            <h4 style={{ margin: "0 0 16px", color: C.gold, fontSize: 13, textTransform: "uppercase", letterSpacing: 1 }}>Order Summary</h4>
+            <h4 style={{ margin: "0 0 16px", color: C.gold, fontSize: 13, textTransform: "uppercase", letterSpacing: 1 }}>{T.orderSum}</h4>
             <div style={{ borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 14, marginBottom: 14 }}>
               <div style={{ fontWeight: 700, fontSize: 14, color: "#fff" }}>{regType.label}</div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 4 }}>EAPCE'27 · Kigali · March 9–11, 2027</div>
@@ -616,12 +802,14 @@ function RegisterPage() {
 
 // ─── EXHIBITION PAGE ──────────────────────────────────────────────────────────
 function ExhibitionPage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState({ user: "", pass: "" });
   const [view, setView] = useState("overview");
 
   if (!loggedIn) return (
-    <PageWrap title="Exhibition & Booth Booking" subtitle="70 booths across KCC halls — Platinum, Gold, Silver and Bronze zones">
+    <PageWrap title={T.exhibTitle} subtitle={T.exhibSubtitle}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 28, alignItems: "start" }}>
         <div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 14, marginBottom: 24 }}>
@@ -686,7 +874,7 @@ function ExhibitionPage() {
   );
 
   return (
-    <PageWrap title="Exhibitor Dashboard" subtitle="TotalEnergies SE — Booth A-01 (Platinum)">
+    <PageWrap title={T.exhibTitle} subtitle="TotalEnergies SE — Booth A-01 (Platinum)">
       <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap", alignItems: "center" }}>
         {["overview", "floor-plan", "assets", "logistics"].map(v => (
           <button key={v} onClick={() => setView(v)} style={{ background: view === v ? C.navy : "#fff", color: view === v ? "#fff" : C.navy, border: `2px solid ${view === v ? C.navy : C.lightGray}`, padding: "8px 18px", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 700, textTransform: "capitalize" }}>{v.replace("-", " ")}</button>
@@ -740,9 +928,11 @@ function ExhibitionPage() {
 
 // ─── SPONSORS PAGE ────────────────────────────────────────────────────────────
 function SponsorsPage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   const [applied, setApplied] = useState(false);
   return (
-    <PageWrap title="Sponsorship Opportunities" subtitle="Partner with East Africa's premier energy conference — EAPCE'27">
+    <PageWrap title={T.spTitle} subtitle={T.spSubtitle}>
       {!applied ? (
         <div>
           <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, #0d3d2a 100%)`, borderRadius: 12, padding: "32px 28px", marginBottom: 36 }}>
@@ -800,9 +990,11 @@ function SponsorsPage() {
 
 // ─── SPEAKERS PAGE ────────────────────────────────────────────────────────────
 function SpeakersPage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   const [selected, setSelected] = useState(null);
   return (
-    <PageWrap title="Speakers & Resource Persons" subtitle="Distinguished experts, ministers and industry leaders from across East Africa and beyond">
+    <PageWrap title={T.spkTitle} subtitle={T.spkSubtitle}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 16 }}>
         {SPEAKERS.map(s => (
           <div key={s.name} onClick={() => setSelected(selected?.name === s.name ? null : s)}
@@ -833,8 +1025,10 @@ function SpeakersPage() {
 
 // ─── VENUE PAGE ───────────────────────────────────────────────────────────────
 function VenuePage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   return (
-    <PageWrap title="Venue & Accommodation" subtitle="Kigali Convention Centre (KCC) — Heart of Kigali, Rwanda">
+    <PageWrap title={T.venueTitle} subtitle={T.venueSubtitle}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 32 }}>
         <div style={{ background: "linear-gradient(135deg, #e8f4f8, #d6eaf8)", borderRadius: 10, height: 200, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${C.lightGray}` }}>
           <div style={{ textAlign: "center" }}>
@@ -877,8 +1071,10 @@ function VenuePage() {
 
 // ─── MEDIA PAGE ───────────────────────────────────────────────────────────────
 function MediaPage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   return (
-    <PageWrap title="News & Media Centre" subtitle="Press releases, media accreditation and communications for EAPCE'27">
+    <PageWrap title={T.mediaTitle} subtitle={T.mediaSubtitle}>
       <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, #0d3d2a 100%)`, borderRadius: 12, padding: "32px 28px", color: "#fff", marginBottom: 36 }}>
         <div style={{ display: "inline-block", background: C.gold, color: C.navy, padding: "4px 14px", borderRadius: 12, fontSize: 10, fontWeight: 800, letterSpacing: 1.5, marginBottom: 14 }}>MEDIA & PR CAMPAIGN</div>
         <h3 style={{ margin: "0 0 10px", fontSize: 20 }}>EAPCE'27 Multi-Channel Communications Strategy</h3>
@@ -931,11 +1127,13 @@ function MediaPage() {
 
 // ─── ADMIN PAGE ───────────────────────────────────────────────────────────────
 function AdminPage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   const [authed, setAuthed] = useState(false);
   const [pw, setPw] = useState("");
   const registered = JSON.parse(sessionStorage.getItem("eapce_regs") || "[]");
   if (!authed) return (
-    <PageWrap title="Admin Dashboard" subtitle="Restricted — authorised personnel only">
+    <PageWrap title={T.adminTitle} subtitle="Restricted — authorised personnel only">
       <div style={{ maxWidth: 360, margin: "0 auto", background: "#fff", borderRadius: 12, padding: 36, border: `1px solid ${C.lightGray}`, textAlign: "center" }}>
         <div style={{ width: 64, height: 64, borderRadius: "50%", background: C.navy, color: "#fff", fontSize: 28, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>🔒</div>
         <h3 style={{ color: C.navy, margin: "0 0 6px" }}>Admin Access</h3>
@@ -946,7 +1144,7 @@ function AdminPage() {
     </PageWrap>
   );
   return (
-    <PageWrap title="Admin Dashboard" subtitle="EAPCE'27 — Live Analytics & Registration Management">
+    <PageWrap title={T.adminTitle} subtitle={T.adminSubtitle}>
       <button onClick={() => setAuthed(false)} style={{ marginBottom: 20, background: "transparent", color: C.danger, border: `1px solid ${C.danger}`, padding: "7px 18px", borderRadius: 6, cursor: "pointer", fontSize: 12 }}>Logout</button>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(170px,1fr))", gap: 14, marginBottom: 28 }}>
         {[["1,047", "Registered Delegates", C.navy], ["USD 889,950", "Total Revenue", C.green], ["68/70", "Booths Booked", C.gold], ["USD 50,000", "Sponsorship", "#7a3b00"]].map(([v, l, c]) => (
@@ -1010,15 +1208,17 @@ function AdminPage() {
 
 // ─── ABOUT PAGE ──────────────────────────────────────────────────────────────
 function AboutPage({ setPage }) {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   return (
     <div>
       {/* Hero */}
-      <div style={{ background: `linear-gradient(160deg, #050e1a 0%, ${C.navy} 50%, #0d3d2a 100%)`, padding: "64px 24px 56px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div style={{ background: `linear-gradient(160deg, #050c18 0%, ${C.navy} 55%, #081e12 100%)`, padding: "80px 24px 72px", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 70% 40%, rgba(201,168,76,0.08) 0%, transparent 55%)", pointerEvents: "none" }} />
         <div style={{ position: "relative", maxWidth: 760, margin: "0 auto" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)", borderRadius: 24, padding: "6px 18px", marginBottom: 24 }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.gold, display: "inline-block" }} />
-            <span style={{ color: C.gold, fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" }}>About the Conference</span>
+            <span style={{ color: C.gold, fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" }}>{T.aboutTag}</span>
           </div>
           <h1 style={{ color: "#fff", fontSize: "clamp(24px,4.5vw,46px)", fontWeight: 900, margin: "0 0 16px", lineHeight: 1.15, letterSpacing: -0.5 }}>
             12th East African Petroleum<br />Conference &amp; Exhibition
@@ -1147,6 +1347,8 @@ function AboutPage({ setPage }) {
 
 // ─── CONTACT PAGE ─────────────────────────────────────────────────────────────
 function ContactPage() {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   const [form, setForm] = useState({ name: "", email: "", org: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
   const [errors, setErrors] = useState({});
@@ -1174,21 +1376,21 @@ function ContactPage() {
   );
 
   return (
-    <PageWrap title="Contact Us" subtitle="Get in touch with the EAPCE'27 team — we're here to help">
+    <PageWrap title={T.contactTitle} subtitle={T.contactSubtitle}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 32, alignItems: "start" }}>
 
         {/* Contact form */}
         <div style={{ background: "#fff", borderRadius: 12, padding: 32, border: `1px solid ${C.lightGray}` }}>
           {!sent ? (
             <>
-              <h3 style={{ color: C.navy, margin: "0 0 20px", fontSize: 17 }}>Send Us a Message</h3>
+              <h3 style={{ color: C.navy, margin: "0 0 20px", fontSize: 17 }}>{T.contactForm}</h3>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-                <F label="Full Name" name="name" required />
-                <F label="Email Address" name="email" required />
+                <F label={T.fullName} name="name" required />
+                <F label={T.emailLbl} name="email" required />
               </div>
-              <F label="Organisation / Company" name="org" />
+              <F label={T.orgLbl} name="org" />
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.5 }}>Subject <span style={{ color: C.danger }}>*</span></label>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.5 }}>{T.subjectLbl} <span style={{ color: C.danger }}>*</span></label>
                 <select value={form.subject} onChange={e => { setForm(f => ({ ...f, subject: e.target.value })); setErrors(er => ({ ...er, subject: "" })); }}
                   style={{ width: "100%", padding: "10px 14px", border: `1.5px solid ${errors.subject ? C.danger : C.lightGray}`, borderRadius: 6, fontSize: 14, background: "#fff" }}>
                   <option value="">Select a subject…</option>
@@ -1203,14 +1405,14 @@ function ContactPage() {
                 </select>
                 {errors.subject && <div style={{ color: C.danger, fontSize: 11, marginTop: 4 }}>⚠ {errors.subject}</div>}
               </div>
-              <F label="Message" name="message" required textarea />
-              <button onClick={handleSubmit} style={{ width: "100%", background: C.navy, color: "#fff", border: "none", padding: "15px", borderRadius: 8, fontSize: 15, fontWeight: 800, cursor: "pointer" }}>Send Message →</button>
+              <F label={T.messageLbl} name="message" required textarea />
+              <button onClick={handleSubmit} style={{ width: "100%", background: C.navy, color: "#fff", border: "none", padding: "15px", borderRadius: 8, fontSize: 15, fontWeight: 800, cursor: "pointer" }}>{T.sendBtn} →</button>
               <div style={{ marginTop: 12, fontSize: 11, color: C.gray, textAlign: "center" }}>We aim to respond within 1 business day.</div>
             </>
           ) : (
             <div style={{ textAlign: "center", padding: "24px 0" }}>
               <div style={{ width: 64, height: 64, borderRadius: "50%", background: C.green, color: "#fff", fontSize: 28, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>✓</div>
-              <h3 style={{ color: C.green, marginBottom: 8 }}>Message Sent!</h3>
+              <h3 style={{ color: C.green, marginBottom: 8 }}>{T.sentTitle}</h3>
               <p style={{ color: C.gray, fontSize: 14, marginBottom: 20 }}>Thank you, <strong>{form.name}</strong>. We'll get back to you at <strong>{form.email}</strong> within 1 business day.</p>
               <button onClick={() => { setSent(false); setForm({ name: "", email: "", org: "", subject: "", message: "" }); }} style={{ background: C.navy, color: "#fff", border: "none", padding: "10px 24px", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Send Another Message</button>
             </div>
@@ -1275,22 +1477,27 @@ function SectionTitle({ children, light }) {
 }
 function PageWrap({ title, subtitle, children }) {
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "44px 24px 64px" }}>
-      <div style={{ marginBottom: 36 }}>
-        <div style={{ fontSize: 10, fontWeight: 800, color: C.gold, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8 }}>EAPCE'27</div>
-        <h1 style={{ margin: 0, color: C.navy, fontSize: "clamp(22px,4vw,36px)", fontWeight: 900, letterSpacing: -0.5 }}>{title}</h1>
-        {subtitle && <p style={{ margin: "8px 0 0", color: C.gray, fontSize: 14 }}>{subtitle}</p>}
-        <div style={{ width: 48, height: 3, background: C.gold, marginTop: 14, borderRadius: 2 }} />
+    <div>
+      <div style={{ background: `linear-gradient(160deg, #060e1c 0%, ${C.navy} 100%)`, padding: "56px 24px 52px", borderBottom: `3px solid ${C.gold}` }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ fontSize: 10, fontWeight: 800, color: C.gold, textTransform: "uppercase", letterSpacing: 3, marginBottom: 12 }}>EAPCE&#39;27</div>
+          <h1 style={{ margin: 0, color: "#ffffff", fontSize: "clamp(24px,4vw,42px)", fontWeight: 900, letterSpacing: -0.5 }}>{title}</h1>
+          {subtitle && <p style={{ margin: "10px 0 0", color: "rgba(255,255,255,0.5)", fontSize: 14 }}>{subtitle}</p>}
+        </div>
       </div>
-      {children}
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 24px 72px" }}>
+        {children}
+      </div>
     </div>
   );
 }
 
 // ─── FOOTER ───────────────────────────────────────────────────────────────────
 function Footer({ setPage }) {
+  const { lang } = useContext(LangContext);
+  const T = TR[lang];
   return (
-    <footer style={{ background: "#060f1c", color: "rgba(255,255,255,0.5)", padding: "48px 24px 28px", marginTop: 80, borderTop: `3px solid ${C.gold}` }}>
+    <footer style={{ background: "#060c16", color: "rgba(255,255,255,0.45)", padding: "60px 24px 32px", marginTop: 0, borderTop: `3px solid ${C.gold}` }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 32, marginBottom: 36 }}>
           <div>
@@ -1301,19 +1508,19 @@ function Footer({ setPage }) {
             </div>
           </div>
           <div>
-            <div style={{ color: "#fff", fontWeight: 700, marginBottom: 14, fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>Quick Links</div>
-            {["Home", "Agenda", "Register", "Exhibition", "Sponsors", "Speakers", "Venue", "Media"].map(p => (
-              <div key={p} onClick={() => setPage(p)} style={{ fontSize: 12, marginBottom: 8, cursor: "pointer", color: "rgba(255,255,255,0.45)" }}>{p}</div>
+            <div style={{ color: "#fff", fontWeight: 700, marginBottom: 14, fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{T.footerLinks}</div>
+            {[["Home","navHome"],["Agenda","navAgenda"],["Register","navRegister"],["Exhibition","navExhibition"],["Sponsors","navSponsors"],["Speakers","navSpeakers"],["Venue","navVenue"],["Media","navMedia"]].map(([p, k]) => (
+              <div key={p} onClick={() => setPage(p)} style={{ fontSize: 12, marginBottom: 8, cursor: "pointer", color: "rgba(255,255,255,0.45)" }}>{T[k]}</div>
             ))}
           </div>
           <div>
-            <div style={{ color: "#fff", fontWeight: 700, marginBottom: 14, fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>Contact</div>
+            <div style={{ color: "#fff", fontWeight: 700, marginBottom: 14, fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{T.footerContact}</div>
             <div style={{ fontSize: 12, lineHeight: 2.2 }}>
               📧 info@eapce27.rw<br />📧 sponsorship@eapce27.rw<br />📧 abstracts@eapce27.rw<br />📞 +250 788 452 503
             </div>
           </div>
           <div>
-            <div style={{ color: "#fff", fontWeight: 700, marginBottom: 14, fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>Organisers</div>
+            <div style={{ color: "#fff", fontWeight: 700, marginBottom: 14, fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{T.footerOrg}</div>
             <div style={{ fontSize: 12, lineHeight: 2 }}>Rwanda Convention Bureau<br />Rwanda Mines, Petroleum<br />&amp; Gas Board (RMB)<br />East African Community (EAC)</div>
           </div>
         </div>
@@ -1328,13 +1535,16 @@ function Footer({ setPage }) {
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState("Home");
+  const [lang, setLang] = useState("en");
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
   const pages = { Home: <HomePage setPage={setPage} />, About: <AboutPage setPage={setPage} />, Agenda: <AgendaPage />, Register: <RegisterPage />, Exhibition: <ExhibitionPage />, Sponsors: <SponsorsPage />, Speakers: <SpeakersPage />, Venue: <VenuePage />, Media: <MediaPage />, Contact: <ContactPage />, Admin: <AdminPage /> };
   return (
-    <div style={{ fontFamily: "'Inter','Segoe UI',sans-serif", background: C.offWhite, minHeight: "100vh", color: C.text }}>
-      <Nav page={page} setPage={setPage} />
-      <main>{pages[page]}</main>
-      <Footer setPage={setPage} />
-    </div>
+    <LangContext.Provider value={{ lang, setLang }}>
+      <div style={{ fontFamily: "'Inter','Segoe UI',sans-serif", background: C.offWhite, minHeight: "100vh", color: C.text }}>
+        <Nav page={page} setPage={setPage} />
+        <main>{pages[page]}</main>
+        <Footer setPage={setPage} />
+      </div>
+    </LangContext.Provider>
   );
 }
