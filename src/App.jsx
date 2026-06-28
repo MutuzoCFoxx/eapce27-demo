@@ -1524,7 +1524,7 @@ function Footer({ setPage }) {
           </div>
         </div>
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20, textAlign: "center", fontSize: 11, color: "rgba(255,255,255,0.2)" }}>
-          © 2027 EAPCE'27 · Rwanda Convention Bureau · All rights reserved &nbsp;·&nbsp; #EAPCE27 #KigaliEnergy2027
+          © 2027 EAPCE'27 · Planet Events Group · All rights reserved &nbsp;·&nbsp; #EAPCE27 #KigaliEnergy2027
         </div>
       </div>
     </footer>
